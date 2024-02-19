@@ -5,15 +5,18 @@ import Image from "next/image"
 import { Roboto } from "next/font/google"
 import { Rating } from "@mui/material"
 
-import { FaHeart, FaMinus, FaPlus } from "react-icons/fa6";
+import { FaHeart } from "react-icons/fa6";
 
 const roboto = Roboto({
     subsets: ['latin'],
-    weight: ['400', '700']
+    weight: ['400', '500', '700', '900']
 })
 
 import { Flowbite, CustomFlowbiteTheme, Tabs } from 'flowbite-react';
 import { MdOutlineDescription, MdOutlineQuestionAnswer, MdOutlineReviews, MdOutlineAssignmentReturn, MdOutlineCreditCard } from 'react-icons/md';
+import { GiCheckMark, GiHandTruck, GiReturnArrow } from "react-icons/gi"
+import Counter from "../general/Counter"
+import { useState } from "react"
 
 
 const customTheme: CustomFlowbiteTheme = {
@@ -41,29 +44,58 @@ const customTheme: CustomFlowbiteTheme = {
         "tabitemcontainer": {
             "base": "",
             "styles": {
-                "fullWidth": "px-2"
+                "fullWidth": "bg-white px-8 py-4"
             }
         },
         "tabpanel": "py-3"
     }
 }
 
+export type CardProductProps = {
+    id: string,
+    name: string,
+    description: string,
+    price: number,
+    quantity: number,
+    image: string,
+    inStock: boolean
+}
 const DetailClient = ({ product }: { product: any }) => {
+
+    const [cardProduct, setCardProduct] = useState<CardProductProps>({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        quantity: 1,
+        image: product.image,
+        inStock: product.inStock
+    })
 
     const productRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / product?.reviews?.length
 
+    const handleIncrease = () => {
+        if(cardProduct.quantity >= 10) return
+        setCardProduct(prev => ({...prev, quantity: prev.quantity + 1}))
+    }
+
+    const handleDecrease = () => {
+        if(cardProduct.quantity <= 1) return
+        setCardProduct(prev => ({...prev, quantity: prev.quantity - 1}))
+    }
+
     return (
-        <div>
+        <div className={roboto.className}>
             <PageContainer>
-                <div className="flex flex-1 flex-col py-10 gap-y-5 min-h-96 max-w-screen-lg">
+                <div className="flex flex-1 flex-col py-10 gap-y-6 min-h-96 max-w-screen-lg">
                     <div className="flex">
                         <div className="basis-1/2 bg-white px-5 py-10 border-r-2 border-b-2">
                             <div className="relative w-[400px] h-[400px] m-auto">
                                 <Image src={product?.image} fill alt={product?.name} className="rounded-l" />
                             </div>
                         </div>
-                        <div className="basis-1/2 space-y-6 bg-neutral-100 py-3 ps-8 pe-2">
-                            <div className="flex flex-col gap-y-1">
+                        <div className="basis-1/2 space-y-6 bg-neutral-100 py-4 ps-8 pe-2">
+                            <div className="flex flex-col mb-6 gap-y-1">
                                 <div>
                                     <span className="px-2.5 py-0.5 text-xs text-orange-600 bg-orange-100 rounded-xl">New Arrival</span>
                                 </div>
@@ -83,27 +115,24 @@ const DetailClient = ({ product }: { product: any }) => {
                             </div>
 
                             <div className="py-2 border-t border-b border-gray-200">
-                                <span className="text-base text-gray-600">In Stock</span>
+                                {
+                                    product?.inStock 
+                                    ?
+                                    <span className="text-base text-green-600">In Stock</span>
+                                    : 
+                                    <span className="text-base text-red-600">Out of Stock</span>
+                                }
                                 <p className="mt-1 text-sm text-orange-500">
-                                    Ships from china.&nbsp;
+                                    Ships from US.&nbsp;
                                     <span className="text-gray-600">
-                                        Most customers receive within 3-31 days.
+                                        Most customers receive within 2-10 days.
                                     </span>
                                 </p>
                             </div>
 
-                            <div className="flex flex-wrap justify-between px-4 items-center">
-                                <div className="w-28">
-                                    <div className="flex flex-row w-full h-10 bg-transparent rounded-lg">
-                                        <button className="w-20 h-full text-gray-600 bg-neutral-300 border-neutral-300 border-r rounded-l outline-none cursor-pointer hover:text-gray-700 hover:bg-gray-300">
-                                            <FaMinus className="m-auto" />
-                                        </button>
-                                        <input type="number" className="w-full px-1 border-y-2 border-neutral-300 font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none text-md hover:text-black" placeholder="1" />
-                                        <button className="w-20 h-full text-gray-600 bg-neutral-300 border-neutral-300 border-l rounded-r outline-none cursor-pointer hover:text-gray-700 hover:bg-gray-300">
-                                            <FaPlus className="m-auto" />
-                                        </button>
-                                    </div>
-                                </div>
+                            <div className="flex flex-wrap pt-6 justify-between px-4 items-center">
+                                
+                                <Counter handleIncrease={handleIncrease} handleDecrease={handleDecrease} cardProduct={cardProduct} />
                                 <div>
                                     <button className="flex items-center justify-center w-full h-10 p-2 mr-4 text-orange-600 border rounded-md border-neutral-300 hover:text-gray-50 hover:bg-orange-600 hover:border-orange-600">
                                         <FaHeart size={18} />
@@ -111,7 +140,7 @@ const DetailClient = ({ product }: { product: any }) => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-y-2">
+                            <div className="flex flex-col pt-1 gap-y-2">
                                 <a href="#" className="w-full px-4 py-3 text-center text-orange-600 bg-orange-100 border border-orange-600 hover:bg-orange-600 hover:text-gray-100 rounded-xl">
                                     Add to cart
                                 </a>
@@ -129,19 +158,40 @@ const DetailClient = ({ product }: { product: any }) => {
                                         {product?.description}
                                     </Tabs.Item>
                                     <Tabs.Item title="Reviews" icon={MdOutlineReviews}>
-                                        This is <span className="font-medium text-gray-800">Dashboard tab's associated content</span>.
-                                        Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-                                        control the content visibility and styling.
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit assumenda corrupti enim magni veniam dolorem odio, veritatis non voluptates quam minus sint ipsum eos id libero inventore voluptatem, animi atque?
                                     </Tabs.Item>
                                     <Tabs.Item title="Q/A" icon={MdOutlineQuestionAnswer}>
-                                        This is <span className="font-medium text-gray-800">Settings tab's associated content</span>.
-                                        Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-                                        control the content visibility and styling.
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit molestias vel ab quod eius laborum quaerat reiciendis commodi delectus natus iste, quis exercitationem pariatur beatae eveniet provident. Reprehenderit, expedita quibusdam?
                                     </Tabs.Item>
                                     <Tabs.Item title="Return" icon={MdOutlineAssignmentReturn}>
-                                        This is <span className="font-medium text-gray-800">Contacts tab's associated content</span>.
-                                        Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-                                        control the content visibility and styling.
+
+                                        <div className="flex flex-col gap-y-8 items-center">
+                                            <div className="text-2xl font-medium mt-2">How to start the easy return process?</div>
+                                            <div className="flex flex-col gap-y-5 text-md max-w-xl">
+                                                <div className="flex flex-row border-b-2 pb-2 items-center gap-x-4">
+                                                    <div className="w-1/12"><GiHandTruck size={42} /></div>
+                                                    <div className="w-full">
+                                                        <div className="text-lg font-medium">Make a return request</div>
+                                                        <div className="text-md">Find the order you want to return on the My Orders page and click Easy return.</div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-row border-b-2 pb-2 items-center gap-x-4">
+                                                    <div className="w-1/12"><GiReturnArrow size={42} className="p-2" /></div>
+                                                    <div className="w-full">
+                                                        <div className="text-lg font-medium">Choose return method</div>
+                                                        <div className="text-md">You can easily return the product you want to return with a refund at your door or choose one of the return to SmoothlyShopping point and cargo delivery options.</div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-row pb-2 items-center gap-x-4">
+                                                    <div className="w-1/12"><GiCheckMark size={42} className="p-2" /></div>
+                                                    <div className="w-full">
+                                                        <div className="text-lg font-medium">Return approve</div>
+                                                        <div className="text-md">Package the order completely with all its equipment and deliver it with the shipment code.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </Tabs.Item>
                                     <Tabs.Item disabled title="Credit">
                                         Disabled content
