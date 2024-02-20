@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.detail-rating-percentages .dr-percentage span:last-child {
+    min-width: 34.16px;
+}

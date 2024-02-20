@@ -1,4 +1,4 @@
-import CardCount from "./CardCount"
+import CartCount from "./CartCount"
 import HamburgerMenu from "./HamburgerMenu"
 import Logo from "./Logo"
 import Search from "./Search"
@@ -9,7 +9,7 @@ const Navbar = () => {
     <div className="flex items-center justify-between gap-3 md:gap-10 px-3 md:px-10 h-16 bg-orange-600 text-slate-100">
       <Logo/>
       <Search/>
-      <CardCount/>
+      <CartCount/>
       <User/>
       <HamburgerMenu/>
     </div>

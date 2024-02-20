@@ -3,9 +3,8 @@ import PageContainer from "../containers/PageContainer"
 import Image from "next/image"
 
 import { Roboto } from "next/font/google"
-import { Rating } from "@mui/material"
 
-import { FaHeart } from "react-icons/fa6";
+import { FaCartShopping, FaHeart } from "react-icons/fa6";
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -17,6 +16,12 @@ import { MdOutlineDescription, MdOutlineQuestionAnswer, MdOutlineReviews, MdOutl
 import { GiCheckMark, GiHandTruck, GiReturnArrow } from "react-icons/gi"
 import Counter from "../general/Counter"
 import { useState } from "react"
+import Button from "../general/Button"
+
+import { Rating as MuiRating } from "@mui/material";
+import Review from "./Review";
+import { useAppDispatch } from "@/lib/hooks";
+import { addToCart } from "@/lib/features/cartSlice";
 
 
 const customTheme: CustomFlowbiteTheme = {
@@ -42,7 +47,7 @@ const customTheme: CustomFlowbiteTheme = {
             }
         },
         "tabitemcontainer": {
-            "base": "",
+            "base": "flex flex-col items-center",
             "styles": {
                 "fullWidth": "bg-white px-8 py-4"
             }
@@ -62,6 +67,8 @@ export type CardProductProps = {
 }
 const DetailClient = ({ product }: { product: any }) => {
 
+    const dispatch = useAppDispatch()
+
     const [cardProduct, setCardProduct] = useState<CardProductProps>({
         id: product.id,
         name: product.name,
@@ -72,16 +79,17 @@ const DetailClient = ({ product }: { product: any }) => {
         inStock: product.inStock
     })
 
-    const productRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / product?.reviews?.length
+    const reviewCount = product?.reviews?.length;
+    const reviewRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount;
 
     const handleIncrease = () => {
-        if(cardProduct.quantity >= 10) return
-        setCardProduct(prev => ({...prev, quantity: prev.quantity + 1}))
+        if (cardProduct.quantity >= 10) return
+        setCardProduct(prev => ({ ...prev, quantity: prev.quantity + 1 }))
     }
 
     const handleDecrease = () => {
-        if(cardProduct.quantity <= 1) return
-        setCardProduct(prev => ({...prev, quantity: prev.quantity - 1}))
+        if (cardProduct.quantity <= 1) return
+        setCardProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
     }
 
     return (
@@ -108,19 +116,22 @@ const DetailClient = ({ product }: { product: any }) => {
                                     <div className={`${roboto.className} text-3xl text-slate-800`}>
                                         {product?.price}
                                     </div>
-                                    <div>
-                                        <Rating name="read-only" value={productRating} readOnly />
+                                    <div className="flex items-center gap-x-1">
+                                        <div className="text-lg">{reviewRating}</div>
+                                        <div className="pt-1">
+                                            <MuiRating name="product-rating" value={reviewRating} precision={0.5} readOnly />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="py-2 border-t border-b border-gray-200">
                                 {
-                                    product?.inStock 
-                                    ?
-                                    <span className="text-base text-green-600">In Stock</span>
-                                    : 
-                                    <span className="text-base text-red-600">Out of Stock</span>
+                                    product?.inStock
+                                        ?
+                                        <span className="text-base text-green-600">In Stock</span>
+                                        :
+                                        <span className="text-base text-red-600">Out of Stock</span>
                                 }
                                 <p className="mt-1 text-sm text-orange-500">
                                     Ships from US.&nbsp;
@@ -131,7 +142,7 @@ const DetailClient = ({ product }: { product: any }) => {
                             </div>
 
                             <div className="flex flex-wrap pt-6 justify-between px-4 items-center">
-                                
+
                                 <Counter handleIncrease={handleIncrease} handleDecrease={handleDecrease} cardProduct={cardProduct} />
                                 <div>
                                     <button className="flex items-center justify-center w-full h-10 p-2 mr-4 text-orange-600 border rounded-md border-neutral-300 hover:text-gray-50 hover:bg-orange-600 hover:border-orange-600">
@@ -141,12 +152,8 @@ const DetailClient = ({ product }: { product: any }) => {
                             </div>
 
                             <div className="flex flex-col pt-1 gap-y-2">
-                                <a href="#" className="w-full px-4 py-3 text-center text-orange-600 bg-orange-100 border border-orange-600 hover:bg-orange-600 hover:text-gray-100 rounded-xl">
-                                    Add to cart
-                                </a>
-                                <a href="#" className="w-full px-4 py-3 text-center text-gray-100 bg-orange-600 border border-transparent hover:border-orange-500 hover:text-orange-700 hover:bg-orange-100 rounded-xl">
-                                    Buy now
-                                </a>
+                                <Button text="Add to Cart" onClick={() => dispatch(addToCart(1)) } isPrimary={true} icon={<FaCartShopping />} />
+                                <Button text="Buy now" onClick={() => { }} isPrimary={false} />
                             </div>
                         </div>
                     </div>
@@ -155,10 +162,17 @@ const DetailClient = ({ product }: { product: any }) => {
                             <Flowbite theme={{ theme: customTheme }}>
                                 <Tabs aria-label="Full width tabs" style="fullWidth">
                                     <Tabs.Item active title="Description" icon={MdOutlineDescription}>
-                                        {product?.description}
+
+                                        <div className="flex flex-col gap-y-8 items-center">
+                                            <div className="text-2xl font-medium mt-2">Details</div>
+                                            <div className="flex flex-col gap-y-5 text-md max-w-xl">
+                                                {product?.description}
+                                            </div>
+                                        </div>
+
                                     </Tabs.Item>
                                     <Tabs.Item title="Reviews" icon={MdOutlineReviews}>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit assumenda corrupti enim magni veniam dolorem odio, veritatis non voluptates quam minus sint ipsum eos id libero inventore voluptatem, animi atque?
+                                        <Review reviews={product.reviews} />
                                     </Tabs.Item>
                                     <Tabs.Item title="Q/A" icon={MdOutlineQuestionAnswer}>
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit molestias vel ab quod eius laborum quaerat reiciendis commodi delectus natus iste, quis exercitationem pariatur beatae eveniet provident. Reprehenderit, expedita quibusdam?
@@ -202,7 +216,7 @@ const DetailClient = ({ product }: { product: any }) => {
                     </div>
                 </div>
             </PageContainer >
-        </div>
+        </div >
     )
 }
 
