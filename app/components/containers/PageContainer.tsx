@@ -1,9 +1,7 @@
-
-
-const PageContainer = ({children}: {children: React.ReactNode}) => {
+const PageContainer = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex justify-center items-center bg-neutral-100">
-        {children}
+      {children}
     </div>
   )
 }

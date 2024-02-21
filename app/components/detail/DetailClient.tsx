@@ -20,8 +20,8 @@ import Button from "../general/Button"
 
 import { Rating as MuiRating } from "@mui/material";
 import Review from "./Review";
-import { useAppDispatch } from "@/lib/hooks";
-import { addToCart } from "@/lib/features/cartSlice";
+import { useAppDispatch } from "@/libs/hooks";
+import { addToCart } from "@/libs/features/cartSlice";
 import priceFormat from "@/utils/PriceFormat";
 
 

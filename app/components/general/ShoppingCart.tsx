@@ -2,8 +2,8 @@ import Image from 'next/image'
 import React from 'react'
 import { CartProductProps } from '../detail/DetailClient'
 import priceFormat from '@/utils/PriceFormat'
-import { useAppDispatch } from '@/lib/hooks'
-import { removeFromCart } from '@/lib/features/cartSlice'
+import { useAppDispatch } from '@/libs/hooks'
+import { removeFromCart } from '@/libs/features/cartSlice'
 
 const ShoppingCart = ({ items, handleCartClick }: {items: Array<CartProductProps>, handleCartClick: () => void}) => {
 

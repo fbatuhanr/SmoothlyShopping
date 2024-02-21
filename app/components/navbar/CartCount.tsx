@@ -1,5 +1,5 @@
 "use client"
-import { useAppSelector } from "@/lib/hooks"
+import { useAppSelector } from "@/libs/hooks"
 import { FaCartShopping, FaCircle } from "react-icons/fa6"
 
 import { Lato } from "next/font/google"
