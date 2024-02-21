@@ -15,13 +15,14 @@ import { Flowbite, CustomFlowbiteTheme, Tabs } from 'flowbite-react';
 import { MdOutlineDescription, MdOutlineQuestionAnswer, MdOutlineReviews, MdOutlineAssignmentReturn, MdOutlineCreditCard } from 'react-icons/md';
 import { GiCheckMark, GiHandTruck, GiReturnArrow } from "react-icons/gi"
 import Counter from "../general/Counter"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "../general/Button"
 
 import { Rating as MuiRating } from "@mui/material";
 import Review from "./Review";
 import { useAppDispatch } from "@/lib/hooks";
 import { addToCart } from "@/lib/features/cartSlice";
+import priceFormat from "@/utils/PriceFormat";
 
 
 const customTheme: CustomFlowbiteTheme = {
@@ -56,7 +57,7 @@ const customTheme: CustomFlowbiteTheme = {
     }
 }
 
-export type CardProductProps = {
+export type CartProductProps = {
     id: string,
     name: string,
     description: string,
@@ -69,7 +70,7 @@ const DetailClient = ({ product }: { product: any }) => {
 
     const dispatch = useAppDispatch()
 
-    const [cardProduct, setCardProduct] = useState<CardProductProps>({
+    const [cardProduct, setCardProduct] = useState<CartProductProps>({
         id: product.id,
         name: product.name,
         description: product.description,
@@ -91,6 +92,11 @@ const DetailClient = ({ product }: { product: any }) => {
         if (cardProduct.quantity <= 1) return
         setCardProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
     }
+
+    useEffect(() => {
+
+        console.log(cardProduct)
+    }, [cardProduct])
 
     return (
         <div className={roboto.className}>
@@ -114,7 +120,7 @@ const DetailClient = ({ product }: { product: any }) => {
                                 </div>
                                 <div className="flex justify-between items-end ps-1 pt-1">
                                     <div className={`${roboto.className} text-3xl text-slate-800`}>
-                                        {product?.price}
+                                        {priceFormat(product?.price)}
                                     </div>
                                     <div className="flex items-center gap-x-1">
                                         <div className="text-lg">{reviewRating}</div>
@@ -152,7 +158,7 @@ const DetailClient = ({ product }: { product: any }) => {
                             </div>
 
                             <div className="flex flex-col pt-1 gap-y-2">
-                                <Button text="Add to Cart" onClick={() => dispatch(addToCart(1)) } isPrimary={true} icon={<FaCartShopping />} />
+                                <Button text="Add to Cart" onClick={() => dispatch(addToCart(cardProduct)) } isPrimary={true} icon={<FaCartShopping />} />
                                 <Button text="Buy now" onClick={() => { }} isPrimary={false} />
                             </div>
                         </div>

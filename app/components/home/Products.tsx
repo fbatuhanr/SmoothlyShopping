@@ -5,7 +5,7 @@ import ProductCard from "./ProductCard"
 const Products = () => {
     return (
         <div className="my-6">
-            <Heading text="Tüm Ürünler" />
+            <Heading text="All Products" />
             <div className="flex items-center flex-wrap gap-3 md:gap-10 px-3 md:px-10">
                 {
                     products.map(product =>

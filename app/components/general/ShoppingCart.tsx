@@ -1,6 +1,13 @@
+import Image from 'next/image'
 import React from 'react'
+import { CartProductProps } from '../detail/DetailClient'
+import priceFormat from '@/utils/PriceFormat'
+import { useAppDispatch } from '@/lib/hooks'
+import { removeFromCart } from '@/lib/features/cartSlice'
 
-const ShoppingCart = ({handleCartClick}: any) => {
+const ShoppingCart = ({ items, handleCartClick }: {items: Array<CartProductProps>, handleCartClick: () => void}) => {
+
+    const dispatch = useAppDispatch()
 
     return (
         <div className="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
@@ -15,7 +22,7 @@ const ShoppingCart = ({handleCartClick}: any) => {
                                     <div className="flex items-start justify-between">
                                         <h2 className="text-lg font-medium text-gray-900" id="slide-over-title">Shopping cart</h2>
                                         <div className="ml-3 flex h-7 items-center">
-                                            <button onClick = {() => handleCartClick()} type="button" className="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
+                                            <button type="button" onClick={() => handleCartClick()} className="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
                                                 <span className="absolute -inset-0.5"></span>
                                                 <span className="sr-only">Close panel</span>
                                                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -28,54 +35,36 @@ const ShoppingCart = ({handleCartClick}: any) => {
                                     <div className="mt-8">
                                         <div className="flow-root">
                                             <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                                <li className="flex py-6">
-                                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                        <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." className="h-full w-full object-cover object-center" />
-                                                    </div>
-
-                                                    <div className="ml-4 flex flex-1 flex-col">
-                                                        <div>
-                                                            <div className="flex justify-between text-base font-medium text-gray-900">
-                                                                <h3>
-                                                                    <a href="#">Throwback Hip Bag</a>
-                                                                </h3>
-                                                                <p className="ml-4">$90.00</p>
+                                                {
+                                                    items.map((item:CartProductProps) => 
+                                                        <li key={item.id} className="flex py-6">
+                                                            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                                <Image src={item.image} alt={item.name} fill className="h-full w-full object-cover object-center" />
                                                             </div>
-                                                            <p className="mt-1 text-sm text-gray-500">Salmon</p>
-                                                        </div>
-                                                        <div className="flex flex-1 items-end justify-between text-sm">
-                                                            <p className="text-gray-500">Qty 1</p>
 
-                                                            <div className="flex">
-                                                                <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className="flex py-6">
-                                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                        <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg" alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch." className="h-full w-full object-cover object-center" />
-                                                    </div>
+                                                            <div className="ml-4 flex flex-1 flex-col">
+                                                                <div>
+                                                                    <div className="flex justify-between text-base font-medium text-gray-900">
+                                                                        <h3>
+                                                                            <a href="#">{item.name}</a>
+                                                                        </h3>
+                                                                        <p className="ml-4">{priceFormat(item.price * item.quantity)}</p>
+                                                                    </div>
+                                                                    <p className="mt-1 text-sm text-gray-500">Salmon</p>
+                                                                </div>
+                                                                <div className="flex flex-1 items-end justify-between text-sm">
+                                                                    <p className="text-gray-500">Qty {item.quantity}</p>
 
-                                                    <div className="ml-4 flex flex-1 flex-col">
-                                                        <div>
-                                                            <div className="flex justify-between text-base font-medium text-gray-900">
-                                                                <h3>
-                                                                    <a href="#">Medium Stuff Satchel</a>
-                                                                </h3>
-                                                                <p className="ml-4">$32.00</p>
+                                                                    <div className="flex">
+                                                                        <button type="button" onClick={() => dispatch(removeFromCart(item.id)) }  className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <p className="mt-1 text-sm text-gray-500">Blue</p>
-                                                        </div>
-                                                        <div className="flex flex-1 items-end justify-between text-sm">
-                                                            <p className="text-gray-500">Qty 1</p>
-
-                                                            <div className="flex">
-                                                                <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                                        </li>
+                                                    )
+                                                }
                                             </ul>
                                         </div>
                                     </div>
@@ -84,7 +73,7 @@ const ShoppingCart = ({handleCartClick}: any) => {
                                 <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                         <p>Subtotal</p>
-                                        <p>$262.00</p>
+                                        <p>{priceFormat(items.reduce((acc: number, item: CartProductProps) => acc + (item.price * item.quantity), 0))}</p>
                                     </div>
                                     <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                     <div className="mt-6">
@@ -92,8 +81,8 @@ const ShoppingCart = ({handleCartClick}: any) => {
                                     </div>
                                     <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                         <p>
-                                            or
-                                            <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                            or&nbsp;
+                                            <button type="button" onClick={() => handleCartClick()} className="font-medium text-indigo-600 hover:text-indigo-500">
                                                 Continue Shopping
                                                 <span aria-hidden="true"> &rarr;</span>
                                             </button>

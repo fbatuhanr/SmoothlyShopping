@@ -25,7 +25,7 @@ const CartCount = () => {
 
   return (
     <div className="hidden md:flex">
-      <button type="button" className="flex justify-between items-center gap-x-3 text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      <button type="button" className="flex justify-between items-center gap-x-3 text-white bg-gradient-to-br from-red-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         onClick={handleCartClick}
       >
         <div className="relative w-7 h-7">
@@ -51,7 +51,7 @@ const CartCount = () => {
       </button>
 
       {
-        isCartVisible && <ShoppingCart handleCartClick={handleCartClick} />
+        isCartVisible && <ShoppingCart items={items} handleCartClick={handleCartClick} />
       }
     </div>
   )
