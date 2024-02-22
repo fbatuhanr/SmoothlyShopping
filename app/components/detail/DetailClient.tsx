@@ -21,8 +21,10 @@ import Button from "../general/Button"
 import { Rating as MuiRating } from "@mui/material";
 import Review from "./Review";
 import { useAppDispatch } from "@/libs/hooks";
-import { addToCart } from "@/libs/features/cartSlice";
+import { addToCart, buyNow } from "@/libs/features/cartSlice";
 import priceFormat from "@/utils/PriceFormat";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 const customTheme: CustomFlowbiteTheme = {
@@ -59,7 +61,7 @@ const customTheme: CustomFlowbiteTheme = {
 
 export type CartProductProps = {
     id: string,
-    name: string,
+    title: string,
     description: string,
     price: number,
     quantity: number,
@@ -69,10 +71,11 @@ export type CartProductProps = {
 const DetailClient = ({ product }: { product: any }) => {
 
     const dispatch = useAppDispatch()
+    const router = useRouter()
 
-    const [cardProduct, setCardProduct] = useState<CartProductProps>({
+    const [cartProduct, setcartProduct] = useState<CartProductProps>({
         id: product.id,
-        name: product.name,
+        title: product.title,
         description: product.description,
         price: product.price,
         quantity: 1,
@@ -84,19 +87,19 @@ const DetailClient = ({ product }: { product: any }) => {
     const reviewRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount;
 
     const handleIncrease = () => {
-        if (cardProduct.quantity >= 10) return
-        setCardProduct(prev => ({ ...prev, quantity: prev.quantity + 1 }))
+        if (cartProduct.quantity >= 10) return
+        setcartProduct(prev => ({ ...prev, quantity: prev.quantity + 1 }))
     }
 
     const handleDecrease = () => {
-        if (cardProduct.quantity <= 1) return
-        setCardProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
+        if (cartProduct.quantity <= 1) return
+        setcartProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
     }
 
     useEffect(() => {
 
-        console.log(cardProduct)
-    }, [cardProduct])
+        console.log(cartProduct)
+    }, [cartProduct])
 
     return (
         <div className={roboto.className}>
@@ -105,7 +108,7 @@ const DetailClient = ({ product }: { product: any }) => {
                     <div className="flex">
                         <div className="basis-1/2 bg-white px-5 py-10 border-r-2 border-b-2">
                             <div className="relative w-[400px] h-[400px] m-auto">
-                                <Image src={product?.image} fill alt={product?.name} className="rounded-l" />
+                                <Image src={product?.image} fill alt={product?.title} className="rounded-l" />
                             </div>
                         </div>
                         <div className="basis-1/2 space-y-6 bg-neutral-100 py-4 ps-8 pe-2">
@@ -115,7 +118,7 @@ const DetailClient = ({ product }: { product: any }) => {
                                 </div>
                                 <div>
                                     <h1 className={`${roboto.className} text-xl text-slate-800`}>
-                                        {product?.name}
+                                        {product?.title}
                                     </h1>
                                 </div>
                                 <div className="flex justify-between items-end ps-1 pt-1">
@@ -149,7 +152,7 @@ const DetailClient = ({ product }: { product: any }) => {
 
                             <div className="flex flex-wrap pt-6 justify-between px-4 items-center">
 
-                                <Counter handleIncrease={handleIncrease} handleDecrease={handleDecrease} cardProduct={cardProduct} />
+                                <Counter handleIncrease={handleIncrease} handleDecrease={handleDecrease} cartProduct={cartProduct} />
                                 <div>
                                     <button className="flex items-center justify-center w-full h-10 p-2 mr-4 text-orange-600 border rounded-md border-neutral-300 hover:text-gray-50 hover:bg-orange-600 hover:border-orange-600">
                                         <FaHeart size={18} />
@@ -158,8 +161,8 @@ const DetailClient = ({ product }: { product: any }) => {
                             </div>
 
                             <div className="flex flex-col pt-1 gap-y-2">
-                                <Button text="Add to Cart" onClick={() => dispatch(addToCart(cardProduct)) } isPrimary={true} icon={<FaCartShopping />} />
-                                <Button text="Buy now" onClick={() => { }} isPrimary={false} />
+                                <Button text="Add to Cart" onClick={() => dispatch(addToCart(cartProduct)) } isPrimary={true} icon={<FaCartShopping />} />
+                                <Button text="Buy now" onClick={() => { dispatch(addToCart(cartProduct)); router.push("/cart")}} isPrimary={false} />
                             </div>
                         </div>
                     </div>

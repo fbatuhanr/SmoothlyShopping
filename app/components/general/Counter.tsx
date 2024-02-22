@@ -1,14 +1,14 @@
 import React from "react"
 import { FaMinus, FaPlus } from "react-icons/fa6";
-import { CardProductProps } from "../detail/DetailClient";
+import { CartProductProps } from "../detail/DetailClient";
 
 interface CounterProps {
-    cardProduct: CardProductProps,
+    cartProduct: CartProductProps,
     handleIncrease: () => void,
     handleDecrease: () => void
 }
 
-const Counter: React.FC<CounterProps> = ({ cardProduct, handleIncrease, handleDecrease }) => {
+const Counter: React.FC<CounterProps> = ({ cartProduct, handleIncrease, handleDecrease }) => {
     return (
         <div className="w-28">
             <div className="flex flex-row w-full h-10 bg-transparent rounded-lg">
@@ -18,7 +18,7 @@ const Counter: React.FC<CounterProps> = ({ cardProduct, handleIncrease, handleDe
                     <FaMinus className="m-auto" />
                 </button>
                 <div className="w-full h-full flex items-center justify-center border-y-2 border-neutral-300 font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none focus:outline-none">
-                    <div className="text-xl">{cardProduct.quantity}</div>
+                    <div className="text-xl">{cartProduct.quantity}</div>
                 </div>
                 <button 
                     className="w-20 h-full text-gray-600 bg-neutral-300 border-neutral-300 border-l rounded-r outline-none cursor-pointer hover:text-gray-700 hover:bg-gray-300"

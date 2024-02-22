@@ -4,6 +4,7 @@ import { CartProductProps } from '../detail/DetailClient'
 import priceFormat from '@/utils/PriceFormat'
 import { useAppDispatch } from '@/libs/hooks'
 import { removeFromCart } from '@/libs/features/cartSlice'
+import Link from 'next/link'
 
 const ShoppingCart = ({ items, handleCartClick }: {items: Array<CartProductProps>, handleCartClick: () => void}) => {
 
@@ -39,14 +40,14 @@ const ShoppingCart = ({ items, handleCartClick }: {items: Array<CartProductProps
                                                     items.map((item:CartProductProps) => 
                                                         <li key={item.id} className="flex py-6">
                                                             <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                                <Image src={item.image} alt={item.name} fill className="h-full w-full object-cover object-center" />
+                                                                <Image src={item.image} alt={item.title} fill className="h-full w-full object-cover object-center" />
                                                             </div>
 
                                                             <div className="ml-4 flex flex-1 flex-col">
                                                                 <div>
                                                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                                                         <h3>
-                                                                            <a href="#">{item.name}</a>
+                                                                            <a href="#">{item.title}</a>
                                                                         </h3>
                                                                         <p className="ml-4">{priceFormat(item.price * item.quantity)}</p>
                                                                     </div>
@@ -77,12 +78,14 @@ const ShoppingCart = ({ items, handleCartClick }: {items: Array<CartProductProps
                                     </div>
                                     <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                     <div className="mt-6">
-                                        <a href="#" className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                                        <Link onClick={handleCartClick} href="/cart" className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                                            Checkout
+                                        </Link>
                                     </div>
                                     <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                         <p>
                                             or&nbsp;
-                                            <button type="button" onClick={() => handleCartClick()} className="font-medium text-indigo-600 hover:text-indigo-500">
+                                            <button type="button" onClick={handleCartClick} className="font-medium text-indigo-600 hover:text-indigo-500">
                                                 Continue Shopping
                                                 <span aria-hidden="true"> &rarr;</span>
                                             </button>

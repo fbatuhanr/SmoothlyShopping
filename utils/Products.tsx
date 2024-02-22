@@ -1,7 +1,7 @@
 export const products = [
     {
         id: "1",
-        name: "iPhone 15 Pro 256 GB",
+        title: "iPhone 15 Pro 256 GB",
         description: "Short description",
         price: 1100.99,
         brand: "apple",
@@ -53,7 +53,7 @@ export const products = [
     },
     {
         id: "2",
-        name: "iPhone 13 128 GB",
+        title: "iPhone 13 128 GB",
         description: "",
         price: 749.90,
         brand: "apple",
@@ -64,7 +64,7 @@ export const products = [
     },
     {
         id: "3",
-        name: "iPhone 13 128 GB",
+        title: "iPhone 13 128 GB",
         description: "",
         price: 750,
         brand: "apple",
@@ -117,7 +117,7 @@ export const products = [
     },
     {
         id: "4",
-        name: "iPhone 15 Pro 256 GB",
+        title: "iPhone 15 Pro 256 GB",
         description: "Short description",
         price: 1049,
         brand: "apple",
