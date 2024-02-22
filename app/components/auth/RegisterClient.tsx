@@ -12,37 +12,63 @@ import axios from "axios"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
+import { toast } from 'react-toastify';
+import { useState } from "react"
+import { Spinner } from "flowbite-react"
 
 const RegisterClient = () => {
 
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<FieldValues>()
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FieldValues>()
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data)
 
-    axios.post("/api/register", data)
-      .then(() => {
-        console.log("user created");
-        signIn("credentials", {
-          email: data.email,
-          password: data.password,
-          redirect: false
-        }).then((callback) => {
-          if(callback?.ok){
-            router.push("/cart")
-            router.refresh()
-            console.log("login success!")
-          }
-          else if(callback?.error){
-            console.log("login error: " + callback.error)
-          }
+
+    const registerPromise: Promise<boolean> = new Promise((resolve, reject) => {
+
+      axios.post("/api/register", data)
+        .then(() => {
+          console.log("user created");
+          signIn("credentials", {
+            ...data,
+            redirect: false
+          }).then((callback) => {
+
+            if (callback?.ok) {
+              console.log("signIn promise login success!")
+              resolve(callback.ok)
+            }
+            if (callback?.error) {
+              console.log("signIn promise login error: " + callback.error)
+              reject()
+            }
+          }).catch((error) => {
+            console.log("request error!" + error)
+          })
         })
+    });
+
+
+
+    toast.promise(
+      registerPromise,
+      {
+        pending: 'Informations are checking...',
+        success: 'Registered Successfully',
+        error: 'Invalid email or password!'
+      }
+    )
+      .then((success) => {
+        if (!success) return
+
+        setTimeout(() => {
+          router.push("/cart")
+        }, 500);
+      })
+      .catch(() => {
+        setIsLoading(false)
       })
   }
 

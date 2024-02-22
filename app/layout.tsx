@@ -4,6 +4,9 @@ import "./globals.css";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import StoreProvider from "./StoreProvider";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import CartSlide from "./components/cart/CartSlide";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +24,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider>
+          <ToastContainer autoClose={2500} pauseOnHover={false} hideProgressBar={true}/>
+          <CartSlide/>
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <main className="flex-grow">{children}</main>

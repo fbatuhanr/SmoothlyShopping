@@ -3,15 +3,42 @@
 import { useAppDispatch, useAppSelector } from "@/libs/hooks"
 import { CartProductProps } from "../detail/DetailClient"
 import Image from "next/image"
-import { removeFromCart } from "@/libs/features/cartSlice"
+import { removeFromCart, updateCart } from "@/libs/features/cartSlice"
 import Link from "next/link"
 import Swal from "sweetalert2";
 import { FaMinus, FaPlus } from "react-icons/fa6"
+import priceFormat from "@/utils/PriceFormat"
+import { useRef, useState } from "react"
+import { FaLongArrowAltLeft } from "react-icons/fa"
 
+
+interface ShippingOptionsProps {
+    type: string,
+    fee: number
+}
 const CartClient = () => {
 
     const { items } = useAppSelector((state) => state.cart)
     const dispatch = useAppDispatch()
+
+    const itemsCost: number = items?.reduce((acc: number, item: CartProductProps) => acc + item.price * item.quantity, 0) || 0
+    
+    const shippingOptions: Array<ShippingOptionsProps> = [
+        {
+            type: "Standard",
+            fee: 9.90
+        },
+        {
+            type: "Priority",
+            fee: 29.90
+        }
+    ]
+    const [shippingOption, setShippingOption] = useState<String>(shippingOptions[0].type)
+    const shippingFee = shippingOptions?.find(i => i?.type == shippingOption)?.fee || 0
+
+    const totalCost: number = itemsCost + shippingFee
+    const itemQtyRefs = useRef<Array<HTMLInputElement>>([])
+
 
     const handleImageDisplay = (title: string, imageUrl: string) => {
 
@@ -24,6 +51,16 @@ const CartClient = () => {
             showCloseButton: true
         });
     }
+    const handleChangeItemQty = (index: number, id: string, amount: number) => {
+
+        const currQty = Number(itemQtyRefs.current[index].value)
+        if ((currQty >= 9 && amount > 0) || (currQty <= 1 && amount < 0)) return
+
+        const resultQty = currQty + amount
+        itemQtyRefs.current[index].value = String(resultQty)
+
+        dispatch(updateCart([id, resultQty]))
+    }
 
     return (
         <div className="container mx-auto mt-10">
@@ -31,7 +68,7 @@ const CartClient = () => {
                 <div className="w-3/4 bg-white px-10 py-10">
                     <div className="flex justify-between border-b pb-8">
                         <h1 className="font-semibold text-2xl">Shopping Cart</h1>
-                        <h2 className="font-semibold text-2xl">3 Items</h2>
+                        <h2 className="font-semibold text-2xl">{items && items.length} Items</h2>
                     </div>
                     <div className="flex mt-10 mb-5">
                         <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>
@@ -41,7 +78,7 @@ const CartClient = () => {
                     </div>
 
                     {
-                        items.map((item: CartProductProps) =>
+                        items && items.map((item: CartProductProps, index: number) =>
 
                             <div key={item.id} className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
                                 <div className="flex w-2/5">
@@ -50,38 +87,51 @@ const CartClient = () => {
                                     </div>
                                     <div className="flex flex-col justify-between ml-4 flex-grow">
                                         <Link href={`product/${item.id}`}><span className="font-bold text-sm">{item.title}</span></Link>
-                                        <span className="text-red-500 text-xs">Apple</span>
-                                        <button type="button" onClick={() => dispatch(removeFromCart(item.id)) } className="flex font-semibold hover:text-red-500 text-gray-500 text-xs">Remove</button>
+                                        <span className="text-red-500 text-xs">&nbsp;</span>
+                                        <button type="button" onClick={() => dispatch(removeFromCart(item.id))} className="flex font-semibold hover:text-red-500 text-gray-500 text-xs">Remove</button>
                                     </div>
                                 </div>
                                 <div className="flex justify-center items-center w-1/5">
-                                    <FaMinus />
-                                    <input className="mx-2 border text-center w-8" type="text" value="1" />
-                                    <FaPlus />
+                                    <button type="button" onClick={() => handleChangeItemQty(index, item.id, -1)}><FaMinus /></button>
+                                    <input className="w-12 mx-2 border text-center"
+                                        type="text"
+                                        ref={e => itemQtyRefs.current[index] = e!}
+                                        defaultValue={item.quantity}
+                                        readOnly
+                                    />
+                                    <button type="button" onClick={() => handleChangeItemQty(index, item.id, 1)}><FaPlus /></button>
                                 </div>
-                                <span className="text-center w-1/5 font-semibold text-sm">$400.00</span>
-                                <span className="text-center w-1/5 font-semibold text-sm">$400.00</span>
+                                <span className="text-center w-1/5 font-semibold text-sm">{priceFormat(item.price)}</span>
+                                <span className="text-center w-1/5 font-semibold text-sm">{priceFormat(item.price * item.quantity)}</span>
                             </div>
                         )
                     }
 
-                    <a href="#" className="flex font-semibold text-indigo-600 text-sm mt-10">
+                    <Link href="/" className="flex items-center gap-x-1 font-semibold text-indigo-600 text-sm mt-10">
 
-                        <svg className="fill-current mr-2 text-indigo-600 w-4" viewBox="0 0 448 512"><path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" /></svg>
+                        <FaLongArrowAltLeft size={20}/>
                         Continue Shopping
-                    </a>
+                    </Link>
                 </div>
 
                 <div id="summary" className="w-1/4 px-8 py-10">
                     <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
                     <div className="flex justify-between mt-10 mb-5">
-                        <span className="font-semibold text-sm uppercase">Items 3</span>
-                        <span className="font-semibold text-sm">590$</span>
+                        <span className="font-semibold text-sm uppercase">Items {items && items.length}</span>
+                        <span className="font-semibold text-sm">
+                            {priceFormat(itemsCost)}
+                        </span>
                     </div>
                     <div>
                         <label className="font-medium inline-block mb-3 text-sm uppercase">Shipping</label>
-                        <select className="block p-2 text-gray-600 w-full text-sm">
-                            <option>Standard shipping - $10.00</option>
+                        <select className="block p-2 text-gray-600 w-full text-sm"
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setShippingOption(e.target.value)}
+                        >
+                            {
+                                shippingOptions.map((item: ShippingOptionsProps) =>
+                                    <option value={item.type}>{item.type} shipping - {priceFormat(item.fee)}</option>
+                                )
+                            }
                         </select>
                     </div>
                     <div className="py-10">
@@ -92,7 +142,9 @@ const CartClient = () => {
                     <div className="border-t mt-8">
                         <div className="flex font-semibold justify-between py-6 text-sm uppercase">
                             <span>Total cost</span>
-                            <span>$600</span>
+                            <span>
+                                {priceFormat(totalCost)}
+                            </span>
                         </div>
                         <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
                     </div>

@@ -5,10 +5,10 @@ import Comment from "./Comment";
 
 const Review = ({ reviews }: any) => {
 
-    if (!reviews) return;
+    if (!reviews || !reviews.length) return;
 
     const reviewCount = reviews.length;
-    const reviewRating = reviews.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount;
+    const reviewRating = reviews.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount || null;
 
     const reviewStarCounts = {
         five: reviews.filter((review: any) => review.rating == 5).length,

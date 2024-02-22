@@ -21,10 +21,11 @@ import Button from "../general/Button"
 import { Rating as MuiRating } from "@mui/material";
 import Review from "./Review";
 import { useAppDispatch } from "@/libs/hooks";
-import { addToCart, buyNow } from "@/libs/features/cartSlice";
+import { addToCart } from "@/libs/features/cartSlice";
 import priceFormat from "@/utils/PriceFormat";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 
 const customTheme: CustomFlowbiteTheme = {
@@ -83,11 +84,11 @@ const DetailClient = ({ product }: { product: any }) => {
         inStock: product.inStock
     })
 
-    const reviewCount = product?.reviews?.length;
-    const reviewRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount;
+    const reviewCount = product?.reviews?.length
+    const reviewRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount || null
 
     const handleIncrease = () => {
-        if (cartProduct.quantity >= 10) return
+        if (cartProduct.quantity >= 9) return
         setcartProduct(prev => ({ ...prev, quantity: prev.quantity + 1 }))
     }
 
@@ -96,10 +97,14 @@ const DetailClient = ({ product }: { product: any }) => {
         setcartProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
     }
 
-    useEffect(() => {
+    const handleAddToCart = (isRedirection: boolean = false) => {
 
-        console.log(cartProduct)
-    }, [cartProduct])
+        dispatch(addToCart(cartProduct))
+        toast.success('Successfully added to cart!');
+
+        if (isRedirection)
+            router.push("/cart")
+    }
 
     return (
         <div className={roboto.className}>
@@ -161,8 +166,8 @@ const DetailClient = ({ product }: { product: any }) => {
                             </div>
 
                             <div className="flex flex-col pt-1 gap-y-2">
-                                <Button text="Add to Cart" onClick={() => dispatch(addToCart(cartProduct)) } isPrimary={true} icon={<FaCartShopping />} />
-                                <Button text="Buy now" onClick={() => { dispatch(addToCart(cartProduct)); router.push("/cart")}} isPrimary={false} />
+                                <Button text="Add to Cart" onClick={() => handleAddToCart() } isPrimary={true} icon={<FaCartShopping />} />
+                                <Button text="Buy now" onClick={() => handleAddToCart(true) } isPrimary={false} />
                             </div>
                         </div>
                     </div>
