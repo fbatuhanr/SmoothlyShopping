@@ -12,22 +12,25 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import { toast } from 'react-toastify';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Spinner } from "flowbite-react"
+import { User } from "@prisma/client"
 
+interface LoginClientProps {
+  currentUser: User | null | undefined
+}
 
-const LoginClient = () => {
+const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FieldValues>()
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    if (!data) return;
-
-    setIsLoading(true);
 
     console.log(data)
+    if (!data) return;
+    setIsLoading(true);
 
     const signInPromise: Promise<boolean> = new Promise((resolve, reject) => {
 
@@ -61,7 +64,8 @@ const LoginClient = () => {
       if (!success) return
 
       setTimeout(() => {
-        router.push("/cart")
+        router.push("/")
+        router.refresh()
       }, 500);
     })
     .catch(() => {
@@ -69,6 +73,15 @@ const LoginClient = () => {
     })
 
   }
+
+  useEffect(() => {
+
+    if(currentUser){
+
+      router.push("/")
+      router.refresh()
+    }
+  }, [])
 
   return (
     <AuthContainer>
@@ -86,11 +99,11 @@ const LoginClient = () => {
               </div>
               <Button text="Login" onClick={handleSubmit(onSubmit)} />
               <div className="text-center my-1">OR</div>
-              <Button text="Login with Google" onClick={() => { }} icon={<FaGoogle />} />
+              <Button text="Login with Google" onClick={() => signIn("google")} icon={<FaGoogle />} />
             </>
             :
             <div className="text-center my-10">
-              <Spinner size="lg" aria-label="Center-aligned spinner example" />
+              <Spinner size="lg" />
             </div>
         }
       </div>

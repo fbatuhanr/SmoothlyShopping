@@ -13,18 +13,25 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import { toast } from 'react-toastify';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Spinner } from "flowbite-react"
+import { User } from "@prisma/client"
 
-const RegisterClient = () => {
+interface RegisterClientProps {
+  currentUser: User | null | undefined
+}
+
+const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FieldValues>()
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data)
 
+    console.log(data)
+    if (!data) return;
+    setIsLoading(true);
 
     const registerPromise: Promise<boolean> = new Promise((resolve, reject) => {
 
@@ -50,8 +57,6 @@ const RegisterClient = () => {
         })
     });
 
-
-
     toast.promise(
       registerPromise,
       {
@@ -59,33 +64,49 @@ const RegisterClient = () => {
         success: 'Registered Successfully',
         error: 'Invalid email or password!'
       }
-    )
-      .then((success) => {
-        if (!success) return
+    ).then((success) => {
+      if (!success) return
 
-        setTimeout(() => {
-          router.push("/cart")
-        }, 500);
-      })
-      .catch(() => {
-        setIsLoading(false)
-      })
+      setTimeout(() => {
+        router.push("/")
+        router.refresh()
+      }, 500);
+    }).catch(() => {
+      setIsLoading(false)
+    })
   }
+
+  useEffect(() => {
+
+    if (currentUser) {
+
+      router.push("/")
+      router.refresh()
+    }
+  }, [])
 
   return (
     <AuthContainer>
       <div className="w-full md:w-[500px] p-3 shadow-lg rounded-md">
         <Heading text="Register" center />
-        <Input type="text" id="name" placeholder="Name" register={register} errors={errors} required />
-        <Input type="text" id="email" placeholder="Email" register={register} errors={errors} required />
-        <Input type="password" id="password" placeholder="Password" register={register} errors={errors} required />
+        {
+          !isLoading
+            ?
+            <>
+              <Input type="text" id="name" placeholder="Name" register={register} errors={errors} required />
+              <Input type="text" id="email" placeholder="Email" register={register} errors={errors} required />
+              <Input type="password" id="password" placeholder="Password" register={register} errors={errors} required />
 
-        <div className="my-4 text-center">
-          <Link className="underline" href="/login">Click here for Login!</Link>
-        </div>
-        <Button text="Register" onClick={handleSubmit(onSubmit)} />
-        <div className="text-center my-1">OR</div>
-        <Button text="Register with Google" onClick={() => { }} icon={<FaGoogle />} />
+              <div className="my-4 text-center">
+                <Link className="underline" href="/login">Click here for Login!</Link>
+              </div>
+              <Button text="Register" onClick={handleSubmit(onSubmit)} />
+              <div className="text-center my-1">OR</div>
+              <Button text="Register with Google" onClick={() => signIn("google")} icon={<FaGoogle />} />
+            </>
+            :
+            <Spinner size="lg" />
+        }
       </div>
     </AuthContainer>
   )
