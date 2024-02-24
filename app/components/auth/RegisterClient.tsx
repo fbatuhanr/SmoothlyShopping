@@ -105,7 +105,9 @@ const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
               <Button text="Register with Google" onClick={() => signIn("google")} icon={<FaGoogle />} />
             </>
             :
-            <Spinner size="lg" />
+            <div className="text-center my-10">
+              <Spinner size="lg" />
+            </div>
         }
       </div>
     </AuthContainer>

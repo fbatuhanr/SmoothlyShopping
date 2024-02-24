@@ -4,21 +4,22 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form"
 
 interface InputProps {
     id: string
-    placeholder: string
-    disabled?: boolean
     type: string
-    required?: boolean
+    placeholder: string
     register: UseFormRegister<FieldValues>
+    required?: boolean
+    disabled?: boolean
     errors: FieldErrors
 }
 
-const Input:React.FC<InputProps> = ({id, placeholder, disabled, type, required, register, errors}) => {
+const Input:React.FC<InputProps> = ({id, type, placeholder, register, required, disabled, errors}) => {
   return (
     <input className={`w-full h-12 p-3 rounded-md outline-none my-2 border ${errors[id] ? "border-red-500" : "border-slate-300"}`}
         id={id} 
         type={type} 
-        placeholder={placeholder} disabled={disabled} 
-        {...register(id, {required})}
+        placeholder={placeholder} 
+        {...register(id, {required})} 
+        disabled={disabled} 
     />
   )
 }

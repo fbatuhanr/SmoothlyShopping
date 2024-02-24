@@ -5,7 +5,7 @@ const AdminLayout = ({children}:{children: React.ReactNode}) => {
   return (
     <div className="flex gap-3">
         <AdminSidebar/>
-        {children}
+        <div className="w-full pb-10">{children}</div>
     </div>
   )
 }
