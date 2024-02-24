@@ -1,30 +1,41 @@
 "use client"
+
+import { FaHome } from "react-icons/fa"
+import { FaComputer, FaDumbbell, FaKitchenSet } from "react-icons/fa6"
+import { IoDiamond } from "react-icons/io5"
 const Category = () => {
-    const categoryList = [
+    
+    const productCategories = [
         {
-            name: "Ayakkabı"
+            title: "Home",
+            icon: <FaHome />
         },
         {
-            name: "Ayakkabı"
+            title: "Kitchen",
+            icon: <FaKitchenSet />
         },
         {
-            name: "Ayakkabı"
+            title: "Electronic",
+            icon: <FaComputer />
         },
         {
-            name: "Ayakkabı"
+            title: "Fashion",
+            icon: <IoDiamond />
         },
         {
-            name: "Ayakkabı"
-        },
-        {
-            name: "Ayakkabı"
+            title: "Sports",
+            icon: <FaDumbbell />
         }
     ]
+
   return (
-    <div className="flex items-center justify-center px-3 md:px-10 gap-3 md:gap-10 py-5 md:py-8 overflow-x-auto">
+    <div className="flex items-center justify-center px-3 md:px-10 gap-3 md:gap-6 py-5 md:py-8 overflow-x-auto">
         {
-            categoryList.map((category, index) => 
-                <div className="border text-slate-500 rounded-full min-w-[120px] flex items-center justify-center cursor-pointer px-4 py-2 text-center" key={index}>{category.name}</div>
+            productCategories.map((category, index) => 
+                <div key={index} className="text-medium font-semibold border text-slate-500 rounded-full min-w-[130px] flex items-center justify-center cursor-pointer gap-x-2 px-4 py-2 text-center">
+                    {category.icon}
+                    {category.title}
+                </div>
             )
         }
     </div>
