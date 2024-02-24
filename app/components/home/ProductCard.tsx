@@ -10,10 +10,10 @@ const ProductCard = ({ product }: { product: any }) => {
   const productRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / product?.reviews?.length
 
   return (
-    <div className="w-[240px] shadow-xl rounded-md">
-      <Link href={`product/${product.id}`}>
-        <div className="px-1 py-3">
-          <div className="relative h-[150px]">
+    <div className="basis-1/2 md:basis-1/4 xl:basis-1/6">
+      <Link href={`/product/${product.id}`}>
+        <div className="mx-1 md:mx-2 p-2 md:p-4 border border-slate-150 shadow-xl rounded-md bg-white">
+          <div className="relative h-[180px] lg:h-[240px]">
             <Image src={product.image} alt={product.title} fill className="object-contain" />
           </div>
           <div className="text-center mt-2 space-y-1">

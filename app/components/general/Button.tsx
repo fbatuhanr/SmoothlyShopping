@@ -2,7 +2,7 @@
 
 interface ButtonProps {
     text: string
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
     isPrimary?: boolean
     small?: boolean
     outline?: boolean

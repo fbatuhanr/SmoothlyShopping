@@ -15,8 +15,6 @@ interface UserProps {
 
 const Account: React.FC<UserProps> = ({ currentUser }) => {
 
-  console.log(currentUser, "currentUser")
-
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
   const handleMenuAction = () => {
@@ -44,7 +42,7 @@ const Account: React.FC<UserProps> = ({ currentUser }) => {
               <div className="absolute top-0 mt-[1px]"><FaUser size={26} /></div>
             </div>
             <div>
-              <p className="mt-[1px] text-base font-medium">Account</p>
+              <p className="mt-[1px] text-base font-medium">{currentUser ? currentUser.name : "Account"}</p>
             </div>
           </button>
           <Fade in={isOpened}>
@@ -72,8 +70,8 @@ const Account: React.FC<UserProps> = ({ currentUser }) => {
                         <AiFillSafetyCertificate size={18} />
                         {currentUser?.role}
                       </p>
-                      <Link onClick={handleMenuAction} href="/admin" className="rounded-lg bg-blue-600 py-2 px-3 text-center text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-md hover:shadow-gray-900/20 focus:opacity-[0.5] focus:shadow-none">
-                        Admin
+                      <Link onClick={handleMenuAction} href={currentUser?.role == "ADMIN" ? "/admin" : "/user"} className="rounded-lg bg-blue-600 py-2 px-3 text-center text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-md hover:shadow-gray-900/20 focus:opacity-[0.5] focus:shadow-none">
+                        {currentUser?.role} Panel
                       </Link>
                     </div>
                   </>

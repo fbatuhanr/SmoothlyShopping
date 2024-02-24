@@ -2,7 +2,7 @@ import React from 'react'
 
 const Orders = () => {
   return (
-    <div>hare</div>
+    <div>Orders...</div>
   )
 }
 

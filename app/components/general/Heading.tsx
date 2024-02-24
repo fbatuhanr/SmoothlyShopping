@@ -2,11 +2,13 @@
 interface HeadingProps {
     center?: boolean
     text: string
+    spacex?: number | 0
+    spacey?: number | 0
 }
 
-const Heading:React.FC<HeadingProps> = ({center, text}) => {
+const Heading:React.FC<HeadingProps> = ({center, text, spacex, spacey}) => {
   return (
-    <div className={`text-slate-500 my-3 md:my-6 px-3 md:px-10 md:text-3xl ${center ? "text-center" : "text-start"}`}>
+    <div className={`text-4xl font-medium text-slate-600 ${center ? "text-center" : "text-start"} px-${spacex} py-${spacey}`}>
         {text}
     </div>
   )
