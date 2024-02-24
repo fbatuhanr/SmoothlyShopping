@@ -1,4 +1,3 @@
-"use client"
 import Image from "next/image"
 import { Rating } from "@mui/material"
 import textClip from "@/utils/TextClip"
@@ -7,8 +6,6 @@ import Link from "next/link"
 import priceFormat from "@/utils/PriceFormat"
 
 const ProductCard = ({ product }: { product: any }) => {
-
-  const router = useRouter()
 
   const productRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / product?.reviews?.length
 

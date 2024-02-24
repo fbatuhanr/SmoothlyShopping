@@ -1,8 +1,11 @@
-import { products } from "@/utils/Products"
 import Heading from "../general/Heading"
 import ProductCard from "./ProductCard"
+import getProducts from "@/app/actions/getProducts"
 
-const Products = () => {
+const Products = async () => {
+
+  const products = await getProducts({category: null})
+
     return (
         <div className="my-6">
             <Heading text="All Products" />

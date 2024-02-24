@@ -15,10 +15,11 @@ const Products = async () => {
   }
 
   return (
-    <div className="w-4/5">
-      <Heading text="Products" center />
+    <div className="w-full px-5">
+      <Heading text="Products" />
       <ManageProductsClient products={products}/>
       <hr className="my-10"/>
+      <Heading text="Add a New Product" />
       <AddProductForm/>
     </div>
   )

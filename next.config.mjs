@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ["productimages.hepsiburada.net"]
+        domains: ["firebasestorage.googleapis.com"]
     }
 };
 

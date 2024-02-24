@@ -1,5 +1,6 @@
 "use client"
 
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FaHome } from "react-icons/fa"
 import { FaComputer, FaDumbbell, FaKitchenSet } from "react-icons/fa6"
@@ -12,6 +13,7 @@ import InputFile from "../general/InputFile"
 import axios, { AxiosError } from "axios"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
+import { storage } from "@/libs/firebase";
 
 const AddProductForm = () => {
 
@@ -53,29 +55,78 @@ const AddProductForm = () => {
     })
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         console.log(data)
-        if(!data) return;
+        if (!data) return;
 
-        data.image = data.image[0].name
-        console.log(data)
-        axios.post("/api/product", data)
-        .then(() => {
-            toast.success("Product added successfully!")
-            reset();
+        const uploadedImgUrl = await uploadImageToStorage(data.image[0])
+        const resultData = { ...data, image: uploadedImgUrl }
+
+        axios.post("/api/product", resultData)
+            .then(() => {
+                toast.success("Product added successfully!")
+                reset();
+                router.refresh()
+            })
+            .catch((error: AxiosError) => {
+                console.log(error, "error")
+            })
+    }
+
+    const uploadImageToStorage = async (file: File) => {
+
+        const metadata = {
+            contentType: 'image/jpeg'
+        };
+
+        const storageRef = ref(storage, 'images/' + file.name);
+        const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+        const uploadedImgUrl = await new Promise((resolve, reject) => {
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                    }
+                },
+                (error) => {
+                    switch (error.code) {
+                        case 'storage/unauthorized':
+                            break;
+                        case 'storage/canceled':
+                            break;
+                        case 'storage/unknown':
+                            break;
+                    }
+                    reject()
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        resolve(downloadURL)
+                    });
+                }
+            );
         })
-        .catch((error: AxiosError) => {
-            console.log(error, "error")
-        })
+
+        return uploadedImgUrl
     }
 
     return (
         <div>
-            <Input id="title" type="text" placeholder="Product title..." register={register} errors={errors} required/>
-            <Input id="description" type="text" placeholder="Product description..." register={register} errors={errors} required/>
-            <Input id="brand" type="text" placeholder="Product brand..." register={register} errors={errors} required/>
-            <Input id="price" type="number" placeholder="Product price..." register={register} errors={errors} required/>
-            <RadioOptions id="category" radioOptions={productCategories} register={register} errors={errors} required/>
+            <Input id="title" type="text" placeholder="Product title..." register={register} errors={errors} required />
+            <Input id="description" type="text" placeholder="Product description..." register={register} errors={errors} required />
+            <Input id="brand" type="text" placeholder="Product brand..." register={register} errors={errors} required />
+            <Input id="price" type="number" placeholder="Product price..." register={register} errors={errors} required />
+            <RadioOptions id="category" radioOptions={productCategories} register={register} errors={errors} required />
             <Checkbox id="inStock" label="Is in stock?" outline register={register} errors={errors} />
-            <InputFile id="image" label="Product image..." register={register} errors={errors} required/>
+            <InputFile id="image" label="Product image..." register={register} errors={errors} required />
             <Button text="Create" onClick={handleSubmit(onSubmit)} />
         </div>
     )
