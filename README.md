@@ -1,3 +1,3 @@
 ### Will update...
 
-Fullstack e-commerce website development with using Next.js(Typescript), Prisma ORM, MongoDb and Tailwindcss
+Fullstack e-commerce website development with using Next.js(Typescript), Prisma ORM, MongoDb, Tailwindcss and Google Firebase for file storage
