@@ -128,8 +128,8 @@ const CartClient = () => {
                             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setShippingOption(e.target.value)}
                         >
                             {
-                                shippingOptions.map((item: ShippingOptionsProps) =>
-                                    <option value={item.type}>{item.type} shipping - {priceFormat(item.fee)}</option>
+                                shippingOptions.map((item: ShippingOptionsProps, index: number) =>
+                                    <option key={index} value={item.type}>{item.type} shipping - {priceFormat(item.fee)}</option>
                                 )
                             }
                         </select>
