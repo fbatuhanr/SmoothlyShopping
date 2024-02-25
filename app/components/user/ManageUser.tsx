@@ -9,7 +9,7 @@ import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 
 interface ManageUserProps {
-    currentUser: User | null | undefined
+    currentUser: User | null | undefined | any
 }
 
 const ManageUser: React.FC<ManageUserProps> = ({ currentUser }) => {
