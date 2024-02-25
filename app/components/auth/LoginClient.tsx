@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { useEffect, useState } from "react"
 import { Spinner } from "flowbite-react"
 import { User } from "@prisma/client"
+import LoadingSpinner from "../general/LoadingSpinner"
 
 interface LoginClientProps {
   currentUser: User | null | undefined | any
@@ -102,9 +103,7 @@ const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
               <Button text="Login with Google" onClick={() => signIn("google")} icon={<FaGoogle />} />
             </>
             :
-            <div className="text-center my-10">
-              <Spinner size="lg" />
-            </div>
+            <LoadingSpinner />
         }
       </div>
     </AuthContainer>

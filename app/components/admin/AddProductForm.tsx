@@ -1,6 +1,5 @@
 "use client"
 
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FaHome } from "react-icons/fa"
 import { FaComputer, FaDumbbell, FaKitchenSet } from "react-icons/fa6"
@@ -13,7 +12,9 @@ import InputFile from "../general/InputFile"
 import axios, { AxiosError } from "axios"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
-import { storage } from "@/libs/firebase";
+
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { storage } from "@/libs/firebase"
 
 const AddProductForm = () => {
 

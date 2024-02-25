@@ -1,10 +1,6 @@
-import Image from "next/image";
-import Banner from "./components/home/Banner";
-import Products from "./components/home/Products";
-import { Slide } from "@mui/material";
-import { FaCircle } from "react-icons/fa6";
-import BannerCarousel from "./components/home/BannerCarousel";
-import CategoryList from "./components/home/CategoryList";
+import CategoryList from "./components/home/CategoryList"
+import BannerCarousel from "./components/home/BannerCarousel"
+import AllProducts from "./components/home/AllProducts"
 
 export default function Home() {
   
@@ -12,7 +8,7 @@ export default function Home() {
     <div>
       <CategoryList />
       <BannerCarousel />
-      <Products />
+      <AllProducts />
     </div>
   );
 }

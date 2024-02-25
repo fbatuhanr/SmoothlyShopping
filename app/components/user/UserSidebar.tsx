@@ -1,14 +1,26 @@
-import { FaCartShopping } from "react-icons/fa6"
-import { MdCreate, MdDashboard } from "react-icons/md"
+
+import { FaHeart, FaPerson } from "react-icons/fa6"
 import UserSidebarItem from "./UserSidebarItem"
+import { FaUser } from "react-icons/fa"
+import { FiPackage } from "react-icons/fi"
 
 const UserSidebar = () => {
 
   const navItems = [
     {
-      title: "Account",
-      icon: <MdDashboard/>,
+      title: "Personal Info",
+      icon: <FaUser/>,
       redirectUrl: "/user"
+    },
+    {
+      title: "Orders",
+      icon: <FiPackage/>,
+      redirectUrl: "/user/orders"
+    },
+    {
+      title: "Wish List",
+      icon: <FaHeart/>,
+      redirectUrl: "/user/wishlist"
     }
   ]
 

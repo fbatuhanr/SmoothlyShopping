@@ -1,14 +1,14 @@
 "use client"
 
-import { useAppDispatch, useAppSelector } from "@/libs/hooks"
+import { useAppDispatch, useAppSelector } from "@/libs/redux/hooks"
+import { removeFromCart, updateCart } from "@/libs/redux/features/cartSlice"
 import { CartProductProps } from "../detail/DetailClient"
 import Image from "next/image"
-import { removeFromCart, updateCart } from "@/libs/features/cartSlice"
 import Link from "next/link"
 import Swal from "sweetalert2";
 import { FaMinus, FaPlus } from "react-icons/fa6"
 import priceFormat from "@/utils/PriceFormat"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FaLongArrowAltLeft } from "react-icons/fa"
 
 
@@ -18,8 +18,9 @@ interface ShippingOptionsProps {
 }
 const CartClient = () => {
 
-    const { items } = useAppSelector((state) => state.cart)
     const dispatch = useAppDispatch()
+
+    const { items } = useAppSelector((state) => state.cart)
 
     const itemsCost: number = items?.reduce((acc: number, item: CartProductProps) => acc + item.price * item.quantity, 0) || 0
     

@@ -8,7 +8,7 @@ const User = async () => {
 
   return (
     <div className="w-full px-5">
-      <Heading text="Manage Your Account" />
+      <Heading text="Personal Informations" center/>
       <ManageUser currentUser={currentUser}/>
     </div>
   )

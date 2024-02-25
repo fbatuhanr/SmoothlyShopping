@@ -32,7 +32,7 @@ const CategoryList = ({activeCategory}:{activeCategory?:string}) => {
     ]
 
     return (
-        <div className="flex items-center justify-center px-3 md:px-10 gap-2 md:gap-4 py-5 md:py-8 overflow-x-auto">
+        <div className="flex items-center justify-center w-full px-3 md:px-10 gap-2 md:gap-4 py-5 md:py-8 overflow-x-auto">
             {
                 productCategories.map((category, index) => {
 

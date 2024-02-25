@@ -21,7 +21,7 @@ const InputFile: React.FC<InputFileProps> = ({ id, label, register, required, di
                 {...register(id, { required })}
                 disabled={disabled}
             />
-            <p className="mt-1 text-sm text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+            <p className="mt-1 text-sm text-gray-500">SVG, PNG, JPG or GIF.</p>
         </div>
     )
 }

@@ -1,12 +1,12 @@
 "use client"
-import { useAppDispatch, useAppSelector } from "@/libs/hooks"
+import { useAppDispatch, useAppSelector } from "@/libs/redux/hooks"
 import { FaCartShopping, FaCircle } from "react-icons/fa6"
 
 import { Lato } from "next/font/google"
 import { Button } from "flowbite-react"
 import ShoppingCart from "../cart/CartSlide"
 import { useState } from "react"
-import { toggleCart } from "@/libs/features/cartSlice"
+import { toggleCart } from "@/libs/redux/features/cartSlice"
 import { toast } from "react-toastify"
 
 const lato = Lato({

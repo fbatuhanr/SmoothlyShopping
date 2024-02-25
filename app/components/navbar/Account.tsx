@@ -70,9 +70,17 @@ const Account: React.FC<UserProps> = ({ currentUser }) => {
                         <AiFillSafetyCertificate size={18} />
                         {currentUser?.role}
                       </p>
-                      <Link onClick={handleMenuAction} href={currentUser?.role == "ADMIN" ? "/admin" : "/user"} className="rounded-lg bg-blue-600 py-2 px-3 text-center text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-md hover:shadow-gray-900/20 focus:opacity-[0.5] focus:shadow-none">
-                        {currentUser?.role} Panel
-                      </Link>
+                      <div>
+                        {
+                          currentUser?.role == "ADMIN" &&
+                          <Link onClick={handleMenuAction} href="/admin" className="rounded-lg bg-blue-800 hover:bg-blue-500 py-2 px-2 text-center text-xs font-semibold text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-md hover:shadow-gray-900/20 focus:opacity-[0.5] focus:shadow-none">
+                            Admin Panel
+                          </Link>
+                        }
+                        <Link onClick={handleMenuAction} href="/user" className="ml-1 rounded-lg bg-blue-600 hover:bg-blue-500 py-2 px-2 text-center text-xs font-semibold text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-md hover:shadow-gray-900/20 focus:opacity-[0.5] focus:shadow-none">
+                          User Panel
+                        </Link>
+                      </div>
                     </div>
                   </>
                   :

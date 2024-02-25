@@ -1,11 +1,16 @@
-
 import { Rating as MuiRating } from "@mui/material";
 import { Rating } from 'flowbite-react';
 import Comment from "./Comment";
+import { Review } from "@prisma/client";
 
-const Review = ({ reviews }: any) => {
+const Reviews = ({ reviews }: {reviews: Array<Review>}) => {
 
-    if (!reviews || !reviews.length) return;
+    if (!reviews || !reviews.length) 
+        return (
+            <div className="pt-4 pb-6 text-xl text-center">
+                There are no reviews for this product.
+            </div>
+        )
 
     const reviewCount = reviews.length;
     const reviewRating = reviews.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount || null;
@@ -59,4 +64,4 @@ const Review = ({ reviews }: any) => {
     )
 }
 
-export default Review
+export default Reviews
