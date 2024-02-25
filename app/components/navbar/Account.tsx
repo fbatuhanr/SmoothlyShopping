@@ -10,7 +10,7 @@ import { signOut } from "next-auth/react"
 
 
 interface UserProps {
-  currentUser: User | null | undefined
+  currentUser?: User | any
 }
 
 const Account: React.FC<UserProps> = ({ currentUser }) => {
