@@ -7,6 +7,7 @@ import StoreProvider from "./StoreProvider";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import CartSlide from "./components/cart/CartSlide";
+import Visited from "./components/visited/visited";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <main className="flex-grow">{children}</main>
+            <Visited />
             <Footer />
           </div>
         </StoreProvider>

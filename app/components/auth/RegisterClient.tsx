@@ -18,7 +18,7 @@ import { Spinner } from "flowbite-react"
 import { User } from "@prisma/client"
 
 interface RegisterClientProps {
-  currentUser: User | null | undefined
+  currentUser: User | null | undefined | any
 }
 
 const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {

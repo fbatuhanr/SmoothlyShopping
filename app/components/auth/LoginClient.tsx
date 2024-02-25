@@ -17,7 +17,7 @@ import { Spinner } from "flowbite-react"
 import { User } from "@prisma/client"
 
 interface LoginClientProps {
-  currentUser: User | null | undefined
+  currentUser: User | null | undefined | any
 }
 
 const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
