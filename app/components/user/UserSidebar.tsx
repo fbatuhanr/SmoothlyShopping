@@ -1,17 +1,13 @@
 
 import { FaHeart, FaPerson } from "react-icons/fa6"
 import UserSidebarItem from "./UserSidebarItem"
-import { FaUser } from "react-icons/fa"
+import { FaAddressBook, FaUser } from "react-icons/fa"
 import { FiPackage } from "react-icons/fi"
+import { MdPayment } from "react-icons/md"
 
 const UserSidebar = () => {
 
   const navItems = [
-    {
-      title: "Personal Info",
-      icon: <FaUser/>,
-      redirectUrl: "/user"
-    },
     {
       title: "Orders",
       icon: <FiPackage/>,
@@ -21,6 +17,21 @@ const UserSidebar = () => {
       title: "Wish List",
       icon: <FaHeart/>,
       redirectUrl: "/user/wishlist"
+    },
+    {
+      title: "Personal Info",
+      icon: <FaUser/>,
+      redirectUrl: "/user"
+    },
+    {
+      title: "Addresses",
+      icon: <FaAddressBook />,
+      redirectUrl: "/user/addresses"
+    },
+    {
+      title: "Payment Methods",
+      icon: <MdPayment />,
+      redirectUrl: "/user/payment-methods"
     }
   ]
 

@@ -46,8 +46,8 @@ model Review {
   comment   String
   createdAt DateTime @default(now())
 
-  product   Product @relation(fields: [productId], references: [id])
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -61,11 +61,31 @@ model User {
   updateAt       DateTime  @updatedAt
   role           Role      @default(USER)
 
-  accounts       Account[]
-  reviews        Review[]
+  accounts Account[]
+  reviews  Review[]
+
+  addresses Address[]
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+model Address {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  name       String
+  address    String
+  city       String
+  state      String
+  country    String
+  zipcode    String
+  phone      String
+  additional String @default("")
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }

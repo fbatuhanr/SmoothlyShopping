@@ -3,6 +3,7 @@ import UserSidebar from '../components/user/UserSidebar'
 import ManageContainer from '../components/containers/ManageContainer'
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
+  
   return (
     <div className="flex">
       <UserSidebar />

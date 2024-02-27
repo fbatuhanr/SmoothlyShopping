@@ -1,17 +1,22 @@
 "use client"
 
-import { FaCaretRight, FaLongArrowAltLeft } from "react-icons/fa"
-import OperationContainer from "../containers/OperationContainer"
-import LinkButton from "../general/clickable/LinkButton"
-import Input from "../general/Input"
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
-import Button from "../general/clickable/Button"
-import { useEffect, useState } from "react"
-import { Accordion } from "flowbite-react"
-import Checkbox from "../general/Checkbox"
-import { MdOutlineShoppingCartCheckout } from "react-icons/md"
+import React, { useEffect, useState } from 'react'
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import Input from '../../general/Input'
+import Button from '../../general/clickable/Button'
+import { Accordion } from 'flowbite-react'
+import Checkbox from '../../general/Checkbox'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+import { User } from '@prisma/client'
 
-const ShippingClient = () => {
+interface ManageAddressesProps {
+    currentUser: User | null | undefined | any
+}
+const ManageAddresses: React.FC<ManageAddressesProps> = ({ currentUser }) => {
+
+    const router = useRouter()
 
     const [savedDeliveryAddress, setSavedDeliveryAdress] = useState<FieldValues>()
     const [savedBillingAddress, setSavedBillingAdress] = useState<FieldValues>()
@@ -33,6 +38,18 @@ const ShippingClient = () => {
         if (!data) return;
         
         setSavedDeliveryAdress(data)
+
+        const resultData = {...data, userId: currentUser.id}
+
+        axios.post("/api/user/address", resultData)
+        .then(() => {
+            toast.success("Address added successfully!")
+            resetDelivery();
+            router.refresh()
+        })
+        .catch(error => {
+            console.log(error, "error")
+        })
     }
 
     const { register: registerBilling, handleSubmit: handleSubmitBilling, formState: { errors: errorsBilling }, reset: resetBilling, watch: watchBilling, setValue: setValueBilling } = useForm<FieldValues>({
@@ -73,17 +90,16 @@ const ShippingClient = () => {
 
         return () => subscription.unsubscribe()
     }, [watchBilling()])
-    return (
-        <OperationContainer step="shipping">
-            <div className="flex shadow-md py-6 border-l border-r border-b">
-                <div className="w-full flex flex-col justify-between gap-y-10 bg-white px-10 py-10">
+
+  return (
+    <div>
+         <div className="w-full flex flex-col justify-between gap-y-10 bg-white px-10 py-10">
                     <div>
                         <div className="flex justify-between border-b pb-8">
                             <div className="font-normal">
-                                <h2 className="text-2xl">Shipping Option</h2>
-                                <p className="text-sm text-gray-400">Choose your delivery and billing address then continue to the checkout.</p>
+                                <h2 className="text-2xl">My Addresses</h2>
+                                <p className="text-sm text-gray-400">Manage your delivery and billing address.</p>
                             </div>
-                            <h2 className="font-normal text-2xl">Items</h2>
                         </div>
                         <div className="w-full md:w-2/3 mt-10 mx-auto">
                             <Accordion collapseAll>
@@ -211,18 +227,9 @@ const ShippingClient = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-between items-end">
-                        <div className="w-3/4 p-3 mr-4">
-                            <LinkButton text="Back to the Cart" target="/cart" size="sm" color="tertiary" iconBegin={<FaLongArrowAltLeft />} innerHeight={0.5} />
-                        </div>
-                        <div className="w-1/4 p-3">
-                            <LinkButton text="Checkout" target="/checkout" color="tertiary" size="base" innerHeight={3} uppercased outlined={false} iconBegin={<MdOutlineShoppingCartCheckout />} iconEnd={<FaCaretRight />} />
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </OperationContainer>
-    )
+    </div>
+  )
 }
 
-export default ShippingClient
+export default ManageAddresses
