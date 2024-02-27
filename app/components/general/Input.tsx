@@ -6,7 +6,7 @@ interface InputProps {
     id: string
     type: string
     defaultValue?: string
-    placeholder: string
+    placeholder?: string
     register: UseFormRegister<FieldValues>
     required?: boolean
     disabled?: boolean

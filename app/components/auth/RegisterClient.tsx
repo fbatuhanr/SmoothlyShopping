@@ -2,7 +2,7 @@
 
 import { FaGoogle } from "react-icons/fa6"
 import AuthContainer from "../containers/AuthContainer"
-import Button from "../general/Button"
+import Button from "../general/clickable/Button"
 import Heading from "../general/Heading"
 import Input from "../general/Input"
 
@@ -14,7 +14,6 @@ import { useRouter } from "next/navigation"
 
 import { toast } from 'react-toastify';
 import { useEffect, useState } from "react"
-import { Spinner } from "flowbite-react"
 import { User } from "@prisma/client"
 import LoadingSpinner from "../general/LoadingSpinner"
 

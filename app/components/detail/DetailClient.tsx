@@ -11,7 +11,7 @@ import { Flowbite, CustomFlowbiteTheme, Tabs } from 'flowbite-react';
 import { MdOutlineDescription, MdOutlineQuestionAnswer, MdOutlineReviews, MdOutlineAssignmentReturn } from 'react-icons/md';
 import Counter from "../general/Counter"
 import { useEffect, useState } from "react"
-import Button from "../general/Button"
+import Button from "../general/clickable/Button"
 
 import { Rating as MuiRating } from "@mui/material";
 import Reviews from "./reviews/Reviews";
@@ -25,7 +25,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Faq from "./faq/Faq";
 import Description from "./description/Description";
-import { Product } from "@prisma/client";
 import Return from "./return/Return";
 
 

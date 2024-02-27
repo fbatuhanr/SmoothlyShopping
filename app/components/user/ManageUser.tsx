@@ -1,7 +1,7 @@
 "use client"
 
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
-import Button from "../general/Button"
+import Button from "../general/clickable/Button"
 import Input from "../general/Input"
 import { User } from "@prisma/client"
 import axios from "axios"

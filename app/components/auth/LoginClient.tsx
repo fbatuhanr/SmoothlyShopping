@@ -2,7 +2,7 @@
 
 import { FaGoogle } from "react-icons/fa6"
 import AuthContainer from "../containers/AuthContainer"
-import Button from "../general/Button"
+import Button from "../general/clickable/Button"
 import Heading from "../general/Heading"
 import Input from "../general/Input"
 
@@ -24,6 +24,13 @@ interface LoginClientProps {
 const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
 
   const router = useRouter()
+  if(currentUser){
+
+    window.location.href = "/"
+    // router.refresh()
+    return
+  }
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FieldValues>()
@@ -74,15 +81,6 @@ const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
     })
 
   }
-
-  useEffect(() => {
-
-    if(currentUser){
-
-      router.push("/")
-      router.refresh()
-    }
-  }, [])
 
   return (
     <AuthContainer>

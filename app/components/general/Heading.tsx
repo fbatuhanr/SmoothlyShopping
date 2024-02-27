@@ -1,3 +1,4 @@
+"use client"
 
 interface HeadingProps {
     text: string

@@ -1,5 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { persistStore, persistReducer } from 'redux-persist'
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import cartSlice from './features/cartSlice'
@@ -17,6 +26,12 @@ const rootReducer = combineReducers({
 const makeConfiguredStore = () =>
   configureStore({
     reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      })
   })
 
 export const makeStore = () => {
@@ -27,6 +42,12 @@ export const makeStore = () => {
     const persistedReducer = persistReducer(persistConfig, rootReducer)
     let store: any = configureStore({
       reducer: persistedReducer,
+      middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      })
     })
     store.__persistor = persistStore(store)
     return store
