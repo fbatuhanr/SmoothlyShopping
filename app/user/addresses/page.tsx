@@ -1,13 +1,19 @@
+import getAddresses from '@/app/actions/getAddresses'
 import { getCurrentUser } from '@/app/actions/getCurrentUser'
-import ManageAddresses from '@/app/components/user/addresses/ManageAddresses'
+import AddressesClient from '@/app/components/user/addresses/AddressesClient'
 
 const MyAddresses = async () => {
 
   const currentUser = await getCurrentUser()
+  const resu = await getAddresses({ userId: currentUser?.id })
 
   return (
     <div>
-      <ManageAddresses currentUser={currentUser}/>
+     {
+      JSON.stringify(resu)
+
+     }
+     <AddressesClient currentUser={currentUser}/>
     </div>
   )
 }

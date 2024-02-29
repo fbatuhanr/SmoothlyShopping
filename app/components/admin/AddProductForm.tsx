@@ -125,7 +125,7 @@ const AddProductForm = () => {
             <Input id="description" type="text" placeholder="Product description..." register={register} errors={errors} required />
             <Input id="brand" type="text" placeholder="Product brand..." register={register} errors={errors} required />
             <Input id="price" type="number" placeholder="Product price..." register={register} errors={errors} required />
-            <RadioOptions id="category" radioOptions={productCategories} register={register} errors={errors} required />
+            <RadioOptions id="category" radioOptions={productCategories} isSideBySide register={register} errors={errors} required />
             <Checkbox id="inStock" label="Is in stock?" outline register={register} errors={errors} />
             <InputFile id="image" label="Product image..." register={register} errors={errors} required />
             <Button text="Create" onClick={handleSubmit(onSubmit)} />
