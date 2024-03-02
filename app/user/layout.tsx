@@ -4,7 +4,6 @@ import ManageContainer from '../components/containers/ManageContainer'
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   
-  alert("hi")
   return (
     <div className="flex">
       <UserSidebar />

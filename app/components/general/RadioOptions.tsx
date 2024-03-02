@@ -23,13 +23,13 @@ const RadioOptions: React.FC<RadioOptionsProps> = ({ id, label, radioOptions, is
                         <li key={index} className={`${isSideBySide ? "border-r border-b-0": "border-b"} w-full border-gray-200`}>
                             <div className="flex items-center ps-3">
                                 <input className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2" 
-                                    id={option.title}
-                                    value={option.title} 
+                                    id={option.id ? `${id}-${option.id}` : option.title}
+                                    value={option.id ? option.id : option.title}
                                     type="radio" 
                                     {...register(id)} 
                                     disabled={disabled}
                                 />
-                                <label htmlFor={option.title} className="flex items-center gap-x-2 w-full py-3 ms-2 text-sm font-medium text-gray-900">
+                                <label htmlFor={option.id ? `${id}-${option.id}` : option.title} className="flex items-center gap-x-2 w-full py-3 ms-2 text-sm font-medium text-gray-900">
                                     {option.icon}
                                     {option.title} 
                                 </label>

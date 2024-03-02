@@ -15,7 +15,7 @@ interface InputProps {
 
 const Input:React.FC<InputProps> = ({id, type, defaultValue, placeholder, register, required, disabled, errors}) => {
   return (
-    <input className={`w-full h-12 p-3 rounded-md outline-none my-2 border ${errors[id] ? "border-red-500" : "border-slate-300"}`}
+    <input className={`w-full h-12 p-3 rounded-md outline-none my-1 border ${errors[id] ? "border-red-500" : "border-slate-300"}`}
         id={id} 
         type={type} 
         defaultValue={defaultValue}

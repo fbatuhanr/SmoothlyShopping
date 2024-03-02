@@ -5,92 +5,104 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import Input from '../../general/Input'
 import Button from '../../general/clickable/Button'
 import { Accordion } from 'flowbite-react'
-import Checkbox from '../../general/Checkbox'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
-import { User } from '@prisma/client'
+import { Address, User } from '@prisma/client'
 import RadioOptions from '../../general/RadioOptions'
+import Swal from 'sweetalert2'
 
 interface ManageAddressesProps {
-    currentUser: User | null | undefined | any
+    currentUser: User
+    addresses: Array<Address>
 }
-const AddressesClient: React.FC<ManageAddressesProps> = ({ currentUser }) => {
+const AddressesClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses }) => {
 
     const router = useRouter()
 
     const [savedDeliveryAddress, setSavedDeliveryAdress] = useState<FieldValues>()
     const [savedBillingAddress, setSavedBillingAdress] = useState<FieldValues>()
 
-    const { register: registerDelivery, handleSubmit: handleSubmitDelivery, formState: { errors: errorsDelivery }, reset: resetDelivery, getValues: getValuesDelivery } = useForm<FieldValues>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FieldValues>({
         defaultValues: {
-            name: "",
-            address: "",
-            city: "",
-            country: "",
-            state: "",
-            zipcode: "",
-            phone: "",
-            additional: ""
+            name: "", address: "", city: "", country: "", state: "", zipcode: "", phone: "", additional: ""
         }
     })
-    const onSubmitDelivery: SubmitHandler<FieldValues> = async (data) => {
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         console.log(data)
         if (!data) return;
-
-        setSavedDeliveryAdress(data)
 
         const resultData = { ...data, userId: currentUser.id }
 
         axios.post("/api/user/address", resultData)
             .then(() => {
                 toast.success("Address added successfully!")
-                resetDelivery();
+                reset();
                 router.refresh()
             })
             .catch(error => {
                 console.log(error, "error")
             })
     }
+    
 
-    const { register: registerBilling, handleSubmit: handleSubmitBilling, formState: { errors: errorsBilling }, reset: resetBilling, watch: watchBilling, setValue: setValueBilling } = useForm<FieldValues>({
+    const { register: registerSelected, handleSubmit: handleSubmitSelected, formState: { errors: errorsSelected }, reset: resetSelected, watch: watchSelected } = useForm<FieldValues>({
         defaultValues: {
-            sameAsDelivery: false,
-
-            name: "",
-            address: "",
-            city: "",
-            country: "",
-            state: "",
-            zipcode: "",
-            phone: ""
+            deliveryAddressId: currentUser.deliveryAddressId, 
+            billingAddressId: currentUser.billingAddressId
         }
     })
-    const onSubmitBilling: SubmitHandler<FieldValues> = async (data) => {
+    const onSubmitSelected: SubmitHandler<FieldValues> = async (data) => {
         console.log(data)
         if (!data) return;
 
-        delete data.sameAsDelivery
-        setSavedBillingAdress(data)
+        axios.put(`/api/user/${currentUser?.id}`, data)
+        .then((res) => {
+            
+            console.log(res)
+            toast.success('Successfully updated!')
+
+            Swal.fire({
+                title: "Changes have been saved!",
+                text: "Please log in again with the new email information.",
+                icon: "success"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    router.refresh();
+                }
+            });
+        })
+        .catch((error: any) => {
+            console.log(error)
+        })
     }
 
     useEffect(() => {
-        const subscription = watchBilling((value, { name, type }) => {
+        const subscription = watchSelected((value) => {
 
-            if (name !== "sameAsDelivery" || !value.sameAsDelivery) return
-            console.log(value, name, type)
-
-            setValueBilling('name', getValuesDelivery('name'))
-            setValueBilling('address', getValuesDelivery('address'))
-            setValueBilling('city', getValuesDelivery('city'))
-            setValueBilling('country', getValuesDelivery('country'))
-            setValueBilling('state', getValuesDelivery('state'))
-            setValueBilling('zipcode', getValuesDelivery('zipcode'))
-            setValueBilling('phone', getValuesDelivery('phone'))
+            console.log(value)
+            
         })
 
         return () => subscription.unsubscribe()
-    }, [watchBilling()])
+    }, [watchSelected()])
+
+    const formattedAddresses =
+        addresses.map((address: Address) => ({
+            id: address.id,
+            title:
+                address.name + ', ' +
+                address.address + ', ' +
+                address.city + ', ' +
+                address.state + ', ' +
+                address.country + ', ' +
+                address.zipcode + ', ' +
+                address.phone +
+                (address.additional ? ", (" + address.additional + ')' : '')
+        })
+        )
+    
 
     return (
         <div>
@@ -104,102 +116,57 @@ const AddressesClient: React.FC<ManageAddressesProps> = ({ currentUser }) => {
                 <div className="flex w-full">
                     <div className="basis-1/2 p-2">
                         <div className="text-xl">Delivery Addresses</div>
-                        <div><RadioOptions id="category" radioOptions={[{ title: "a" }, { title: "b" }]} register={registerDelivery} errors={errorsDelivery} required /></div>
+                        <div><RadioOptions id="deliveryAddressId" radioOptions={formattedAddresses} register={registerSelected} errors={errorsSelected} required /></div>
                     </div>
                     <div className="basis-1/2 p-2">
                         <div className="text-xl">Billing Addresses</div>
-                        <div><RadioOptions id="category" radioOptions={[{ title: "title" }]} register={registerDelivery} errors={errorsDelivery} required /></div>
+                        <div><RadioOptions id="billingAddressId" radioOptions={formattedAddresses} register={registerSelected} errors={errorsSelected} required /></div>
                     </div>
                 </div>
-                <div className="w-full md:w-2/3 mt-10 mx-auto">
+                <div className="w-full md:w-2/3 mt-4 mx-auto">
                     <Accordion collapseAll>
                         <Accordion.Panel>
-                            <Accordion.Title className="font-semibold">Add a Delivery Adress</Accordion.Title>
+                            <Accordion.Title className="font-semibold">Add a New Adress</Accordion.Title>
                             <Accordion.Content>
                                 <form className="px-4">
-                                    <label className="block mb-6">
+                                    <label className="block mb-2">
                                         <span className="text-gray-700">Name</span>
-                                        <Input id="name" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                        <Input id="name" type="text" register={register} errors={errors} required />
                                     </label>
-                                    <label className="block mb-6">
+                                    <label className="block mb-2">
                                         <span className="text-gray-700">Adress</span>
-                                        <Input id="address" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                        <Input id="address" type="text" register={register} errors={errors} required />
                                     </label>
-                                    <div className="flex justify-between mb-6">
+                                    <div className="flex justify-between mb-2">
                                         <label className="block">
                                             <span className="text-gray-700">City</span>
-                                            <Input id="city" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                            <Input id="city" type="text" register={register} errors={errors} required />
                                         </label>
                                         <label className="block">
                                             <span className="text-gray-700">State</span>
-                                            <Input id="state" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                            <Input id="state" type="text" register={register} errors={errors} required />
                                         </label>
                                     </div>
-                                    <div className="flex justify-between mb-6">
+                                    <div className="flex justify-between mb-2">
                                         <label className="block">
                                             <span className="text-gray-700">Country</span>
-                                            <Input id="country" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                            <Input id="country" type="text" register={register} errors={errors} required />
                                         </label>
                                         <label className="block">
                                             <span className="text-gray-700">Zipcode</span>
-                                            <Input id="zipcode" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                            <Input id="zipcode" type="text" register={register} errors={errors} required />
                                         </label>
                                     </div>
-                                    <label className="block mb-6">
+                                    <label className="block mb-2">
                                         <span className="text-gray-700">Phone</span>
-                                        <Input id="phone" type="text" register={registerDelivery} errors={errorsDelivery} required />
+                                        <Input id="phone" type="text" register={register} errors={errors} required />
                                     </label>
                                     <label className="block mb-6">
                                         <span className="text-gray-700">Additional Information</span>
-                                        <Input id="additional" type="text" register={registerDelivery} errors={errorsDelivery} />
+                                        <Input id="additional" type="text" register={register} errors={errors} />
                                     </label>
-                                    <div className="mb-6">
-                                        <Button text="Save" color="tertiary" size="xl" innerHeight={2} onClick={handleSubmitDelivery(onSubmitDelivery)} />
-                                    </div>
-                                </form>
-                            </Accordion.Content>
-                        </Accordion.Panel>
-                        <Accordion.Panel aria-disabled={true}>
-                            <Accordion.Title className="font-semibold">Add a Billing Adress</Accordion.Title>
-                            <Accordion.Content>
-                                <div className="border-b mb-4 pb-4">
-                                    <Checkbox id="sameAsDelivery" label="Same as Delivery Address" outline register={registerBilling} errors={errorsBilling} />
-                                </div>
-                                <form className="px-4">
-                                    <label className="block mb-6">
-                                        <span className="text-gray-700">Name</span>
-                                        <Input id="name" type="text" register={registerBilling} errors={errorsBilling} required />
-                                    </label>
-                                    <label className="block mb-6">
-                                        <span className="text-gray-700">Adress</span>
-                                        <Input id="address" type="text" register={registerBilling} errors={errorsBilling} required />
-                                    </label>
-                                    <div className="flex justify-between mb-6">
-                                        <label className="block">
-                                            <span className="text-gray-700">City</span>
-                                            <Input id="city" type="text" register={registerBilling} errors={errorsBilling} required />
-                                        </label>
-                                        <label className="block">
-                                            <span className="text-gray-700">State</span>
-                                            <Input id="state" type="text" register={registerBilling} errors={errorsBilling} required />
-                                        </label>
-                                    </div>
-                                    <div className="flex justify-between mb-6">
-                                        <label className="block">
-                                            <span className="text-gray-700">Country</span>
-                                            <Input id="country" type="text" register={registerBilling} errors={errorsBilling} required />
-                                        </label>
-                                        <label className="block">
-                                            <span className="text-gray-700">Zipcode</span>
-                                            <Input id="zipcode" type="text" register={registerBilling} errors={errorsBilling} required />
-                                        </label>
-                                    </div>
-                                    <label className="block mb-6">
-                                        <span className="text-gray-700">Phone</span>
-                                        <Input id="phone" type="text" register={registerBilling} errors={errorsBilling} required />
-                                    </label>
-                                    <div className="mb-6">
-                                        <Button text="Save" color="tertiary" size="xl" innerHeight={2} onClick={handleSubmitBilling(onSubmitBilling)} />
+                                    <div className="mb-2">
+                                        <Button text="Save" color="tertiary" size="xl" innerHeight={2} onClick={handleSubmit(onSubmit)} />
                                     </div>
                                 </form>
                             </Accordion.Content>
@@ -207,34 +174,7 @@ const AddressesClient: React.FC<ManageAddressesProps> = ({ currentUser }) => {
                     </Accordion>
                 </div>
                 <div className="flex mt-10 mb-5">
-                    <div className="w-1/2 p-3">
-                        <div className="border-2 rounded-md min-h-52">
-                            <div className="py-2 text-center text-lg border-b bg-slate-100">Selected Delivery Address</div>
-                            <div className="mt-3 p-4 text-md">
-                                {
-                                    savedDeliveryAddress
-                                        ?
-                                        Object.values(savedDeliveryAddress).join(", ")
-                                        :
-                                        <div>...Not found!</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-1/2 p-3">
-                        <div className="border-2 rounded-md min-h-52">
-                            <div className="py-2 text-center text-lg border-b">Selected Billing Address</div>
-                            <div className="mt-3 p-4 text-md">
-                                {
-                                    savedBillingAddress
-                                        ?
-                                        Object.values(savedBillingAddress).join(", ")
-                                        :
-                                        <div>...Not found!</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <Button text="Save Changes" onClick={handleSubmitSelected(onSubmitSelected)} color="secondary" size="9xl" outlined innerHeight={4} />
                 </div>
             </div>
         </div>

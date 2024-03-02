@@ -4,12 +4,15 @@ import { NextResponse } from "next/server"
 export async function POST(request:Request) {
 
     const body = await request.json()
-    const { name, address, city, state, country, zipcode, phone } = body
+    const { name, address, city, state, country, zipcode, phone, userId } = body
 
     console.log(body)
 
     const addr = await prisma.address.create({
-        data: body
+        data: {
+            name, address, city, state, country, zipcode, phone,
+            userId
+        }
     })
 
     console.log(addr)

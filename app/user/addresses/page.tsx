@@ -5,15 +5,11 @@ import AddressesClient from '@/app/components/user/addresses/AddressesClient'
 const MyAddresses = async () => {
 
   const currentUser = await getCurrentUser()
-  const resu = await getAddresses({ userId: currentUser?.id })
+  const addresses = await getAddresses({ userId: currentUser?.id })
 
   return (
     <div>
-     {
-      JSON.stringify(resu)
-
-     }
-     <AddressesClient currentUser={currentUser}/>
+     <AddressesClient currentUser={currentUser} addresses={addresses}/>
     </div>
   )
 }

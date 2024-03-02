@@ -16,9 +16,6 @@ const Products = async () => {
 
   return (
     <div className="w-full px-5">
-      {
-        JSON.stringify(currentUser)
-      }
       <Heading text="Products" />
       <ManageProductsClient products={products}/>
       <hr className="my-10"/>

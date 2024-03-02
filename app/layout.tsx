@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
-import StoreProvider from "./StoreProvider";
 import { ToastContainer } from "react-toastify";
 import CartSlide from "./components/cart/CartSlide";
 
-import 'react-toastify/dist/ReactToastify.css';
-import "./globals.css";
+import StoreProvider from "./StoreProvider";
 import AuthProvider from "./AuthProvider";
 
+import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
+
+import 'react-toastify/dist/ReactToastify.css';
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Smoothly Shopping",
