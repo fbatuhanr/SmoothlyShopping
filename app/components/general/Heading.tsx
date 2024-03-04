@@ -1,14 +1,20 @@
 "use client"
 
 interface HeadingProps {
-    text: string
-    center?: boolean
+  text: string
+  subText?: string
+  border?: boolean
+  center?: boolean
+  className?: string
 }
 
-const Heading:React.FC<HeadingProps> = ({text, center}) => {
+const Heading: React.FC<HeadingProps> = ({ text, subText, border, center, className }) => {
   return (
-    <div className={`text-4xl py-2 font-medium text-slate-600 ${center ? "text-center" : "text-start"}`}>
-        {text}
+    <div className={`${border && "border-b"} pb-6 mb-6 ${center && "text-center"} ${className && className}`}>
+      <div className="text-2xl">{text}</div>
+      {
+        subText && <div className="text-sm text-gray-400">{subText}</div>
+      }
     </div>
   )
 }

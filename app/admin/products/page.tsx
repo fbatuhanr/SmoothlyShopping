@@ -1,26 +1,19 @@
 import { getCurrentUser } from '@/app/actions/getCurrentUser'
 import getProducts from '@/app/actions/getProducts'
-import AddProductForm from '@/app/components/admin/AddProductForm'
-import ManageProductsClient from '@/app/components/admin/ManageProductsClient'
-import Heading from '@/app/components/general/Heading'
-import React from 'react'
+import AdminProductsClient from '@/app/components/admin/products/AdminProductsClient'
 
 const Products = async () => {
 
-  const products = await getProducts({category: null})
+  const products = await getProducts({ category: null })
   const currentUser = await getCurrentUser()
 
-  if(!currentUser || currentUser.role !== "ADMIN"){
+  if (!currentUser || currentUser.role !== "ADMIN") {
     return <div>UYARI!</div>
   }
 
   return (
-    <div className="w-full px-5">
-      <Heading text="Products" />
-      <ManageProductsClient products={products}/>
-      <hr className="my-10"/>
-      <Heading text="Add a New Product" />
-      <AddProductForm/>
+    <div>
+      <AdminProductsClient products={products}/>
     </div>
   )
 }

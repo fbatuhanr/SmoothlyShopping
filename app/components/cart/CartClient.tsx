@@ -2,6 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from "@/libs/redux/hooks"
 import { removeFromCart, updateCart } from "@/libs/redux/features/cartSlice"
+import { setShippingOption, setItemsCost, setTotalCost } from "@/libs/redux/features/checkoutSlice"
+
 import { CartProductProps } from "../detail/DetailClient"
 import Image from "next/image"
 import Link from "next/link"
@@ -11,19 +13,17 @@ import priceFormat from "@/utils/PriceFormat"
 import { useRef, useState } from "react"
 import { FaLongArrowAltLeft } from "react-icons/fa"
 import { useRouter } from "next/navigation"
-import { MdLocalShipping, MdOutlineShoppingCartCheckout } from "react-icons/md"
+import { MdLocalShipping } from "react-icons/md"
 import LinkButton from "../general/clickable/LinkButton"
 
 import OperationContainer from "../containers/OperationContainer"
 import { FaCaretRight } from "react-icons/fa";
 import Button from "../general/clickable/Button"
+import { ShippingOptionsProps } from "../admin/shipping/AdminShippingClient"
+import { ShippingOption } from "@prisma/client"
 
 
-interface ShippingOptionsProps {
-    type: string,
-    fee: number
-}
-const CartClient = () => {
+const CartClient:React.FC<ShippingOptionsProps> = ({shippingOptions}) => {
 
     const router = useRouter()
 
@@ -40,27 +40,18 @@ const CartClient = () => {
 
     const itemsCost: number = items?.reduce((acc: number, item: CartProductProps) => acc + item.price * item.quantity, 0) || 0
 
-    const shippingOptions: Array<ShippingOptionsProps> = [
-        {
-            type: "Standard",
-            fee: 9.90
-        },
-        {
-            type: "Priority",
-            fee: 29.90
-        }
-    ]
-    const [shippingOption, setShippingOption] = useState<String>(shippingOptions[0].type)
-    const shippingFee = shippingOptions?.find(i => i?.type == shippingOption)?.fee || 0
+    const [selectedShippingOption, setSelectedShippingOption] = useState<string>(shippingOptions[0].id)
+    const shippingPrice = shippingOptions?.find(i => i?.id == selectedShippingOption)?.price || 0
 
-    const totalCost: number = itemsCost + shippingFee
+    const totalCost: number = itemsCost + shippingPrice
     const itemQtyRefs = useRef<Array<HTMLInputElement>>([])
 
 
-    const handleImageDisplay = (title: string, imageUrl: string) => {
+    const handleImageDisplay = (title: string, brand: string, imageUrl: string) => {
 
         Swal.fire({
             title,
+            text: brand,
             imageUrl,
             imageWidth: 400,
             imageAlt: title,
@@ -81,7 +72,13 @@ const CartClient = () => {
 
 
     const handleNextStep = () => {
-        // secilen kargoyu + toplam tutarı kaydedecek
+        
+        const selectedOption = shippingOptions.find((option:ShippingOption) => option.id == selectedShippingOption)!
+        dispatch(setShippingOption(selectedOption))
+        dispatch(setItemsCost(itemsCost))
+        dispatch(setTotalCost(totalCost))
+
+        router.push("/shipping")
     }
 
     return (
@@ -108,7 +105,7 @@ const CartClient = () => {
                                 <div key={item.id} className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
                                     <div className="flex w-2/5">
                                         <div className="relative w-20">
-                                            <Image src={item.image} onClick={() => handleImageDisplay(item.title, item.image)} alt={item.title} fill className="object-contain cursor-pointer" />
+                                            <Image src={item.image} onClick={() => handleImageDisplay(item.title, item.brand, item.image)} alt={item.title} fill className="object-contain cursor-pointer" />
                                         </div>
                                         <div className="flex flex-col justify-between ml-4 flex-grow">
                                             <Link href={`product/${item.id}`}><span className="font-bold text-sm">{item.title}</span></Link>
@@ -132,7 +129,7 @@ const CartClient = () => {
                             )
                         }
                     </div>
-                    <LinkButton text="Continue Shopping" target="/" size="sm" color="tertiary" iconBegin={<FaLongArrowAltLeft />} innerHeight={0.5} />
+                    <LinkButton target="/" text="Continue Shopping" size="sm" color="tertiary" iconBegin={<FaLongArrowAltLeft />} innerHeight={0.5} />
                 </div>
 
                 <div id="summary" className="w-1/4 px-8 py-10">
@@ -151,11 +148,11 @@ const CartClient = () => {
                     <div>
                         <label className="font-medium inline-block mb-3 text-sm uppercase">Shipping</label>
                         <select className="block p-2 text-gray-600 w-full text-sm"
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setShippingOption(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedShippingOption(e.target.value)}
                         >
                             {
-                                shippingOptions.map((item: ShippingOptionsProps, index: number) =>
-                                    <option key={index} value={item.type}>{item.type} shipping - {priceFormat(item.fee)}</option>
+                                shippingOptions.map((item: ShippingOption) =>
+                                    <option key={item.id} value={item.id}>{item.name} - {priceFormat(item.price)}</option>
                                 )
                             }
                         </select>
@@ -172,7 +169,7 @@ const CartClient = () => {
                                 {priceFormat(totalCost)}
                             </span>
                         </div>
-                        <LinkButton text="Shipping" target="/shipping" color="tertiary" size="base" innerHeight={3} uppercased outlined={false} iconBegin={<MdLocalShipping />} iconEnd={<FaCaretRight />} />
+                        <Button onClick={handleNextStep} text="Shipping" color="tertiary" size="base" innerHeight={3} uppercased outlined={false} iconBegin={<MdLocalShipping />} iconEnd={<FaCaretRight />} />
                     </div>
                 </div>
             </div>

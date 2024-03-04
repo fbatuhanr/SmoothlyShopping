@@ -27,7 +27,7 @@ model Account {
 }
 
 model Product {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
   brand       String
@@ -61,13 +61,15 @@ model User {
   updateAt       DateTime  @updatedAt
   role           Role      @default(USER)
 
-  deliveryAddressId String? @db.ObjectId @default("")
-  billingAddressId  String? @db.ObjectId @default("")
+  deliveryAddressId String? @default("") @db.ObjectId
+  billingAddressId  String? @default("") @db.ObjectId
 
   accounts Account[]
   reviews  Review[]
 
   addresses Address[]
+  
+  Order  Order[]
 }
 
 enum Role {
@@ -91,4 +93,49 @@ model Address {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model ShippingOption {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  price Float
+
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id     String          @id @default(auto()) @map("_id") @db.ObjectId
+  status OrderStatusEnum
+
+  itemsCost Float
+  totalCost Float
+
+  itemId     String[]    @db.ObjectId
+  orderItems OrderItem[]
+
+  deliveryAddressId String @db.ObjectId
+  billingAddressId  String @db.ObjectId
+
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+}
+
+model OrderItem {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @db.ObjectId
+
+  productId String  @db.ObjectId
+  quantity  Int
+  price  Float
+
+  @@unique([orderId, productId], name: "UniqueOrderItem")
+}
+
+enum OrderStatusEnum {
+  Processing
+  Shipped
+  Delivered
 }

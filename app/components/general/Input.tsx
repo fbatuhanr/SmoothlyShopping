@@ -8,14 +8,15 @@ interface InputProps {
     defaultValue?: string
     placeholder?: string
     register: UseFormRegister<FieldValues>
+    errors: FieldErrors
     required?: boolean
     disabled?: boolean
-    errors: FieldErrors
+    className?: string
 }
 
-const Input:React.FC<InputProps> = ({id, type, defaultValue, placeholder, register, required, disabled, errors}) => {
+const Input:React.FC<InputProps> = ({id, type, defaultValue, placeholder, register, errors, required, disabled, className}) => {
   return (
-    <input className={`w-full h-12 p-3 rounded-md outline-none my-1 border ${errors[id] ? "border-red-500" : "border-slate-300"}`}
+    <input className={`w-full h-12 p-3 rounded-md outline-none my-1 border ${errors[id] ? "border-red-500" : "border-slate-300"} ${className && className}`}
         id={id} 
         type={type} 
         defaultValue={defaultValue}

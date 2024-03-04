@@ -10,11 +10,11 @@ import Image from "next/image";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@/libs/firebase";
 
-interface ManageProductsClientProps {
+interface ManageProductsProps {
     products: Product[]
 }
 
-const ManageProductsClient: React.FC<ManageProductsClientProps> = ({ products }) => {
+const ManageProducts: React.FC<ManageProductsProps> = ({ products }) => {
 
     const router = useRouter()
 
@@ -114,4 +114,4 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({ products })
     )
 }
 
-export default ManageProductsClient
+export default ManageProducts

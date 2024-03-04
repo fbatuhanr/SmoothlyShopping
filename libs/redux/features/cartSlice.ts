@@ -24,7 +24,7 @@ export const createStream = createAsyncThunk(
 */
 
 export const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {
     toggleCart: (state, action: PayloadAction<boolean>) => {

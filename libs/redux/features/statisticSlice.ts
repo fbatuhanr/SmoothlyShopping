@@ -11,7 +11,7 @@ const initialState: statisticState = {
 }
 
 export const statisticSlice = createSlice({
-    name: 'statistic',
+    name: "statistic",
     initialState,
     reducers: {
         visitProduct: (state, action: PayloadAction<Product>) => {

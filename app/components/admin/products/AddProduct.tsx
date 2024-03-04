@@ -4,11 +4,11 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { FaHome } from "react-icons/fa"
 import { FaComputer, FaDumbbell, FaKitchenSet } from "react-icons/fa6"
 import { IoDiamond } from "react-icons/io5"
-import Button from "../general/clickable/Button"
-import Input from "../general/Input"
-import Checkbox from "../general/Checkbox"
-import RadioOptions from "../general/RadioOptions"
-import InputFile from "../general/InputFile"
+import Button from "../../general/clickable/Button"
+import Input from "../../general/Input"
+import Checkbox from "../../general/Checkbox"
+import RadioOptions from "../../general/RadioOptions"
+import InputFile from "../../general/InputFile"
 import axios, { AxiosError } from "axios"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 import { storage } from "@/libs/firebase"
 
-const AddProductForm = () => {
+const AddProduct = () => {
 
     const router = useRouter()
 
@@ -128,9 +128,9 @@ const AddProductForm = () => {
             <RadioOptions id="category" radioOptions={productCategories} isSideBySide register={register} errors={errors} required />
             <Checkbox id="inStock" label="Is in stock?" outline register={register} errors={errors} />
             <InputFile id="image" label="Product image..." register={register} errors={errors} required />
-            <Button text="Create" onClick={handleSubmit(onSubmit)} />
+            <Button text="Create" onClick={handleSubmit(onSubmit)} innerHeight={4} color="secondary" className="mt-8" />
         </div>
     )
 }
 
-export default AddProductForm
+export default AddProduct

@@ -1,9 +1,12 @@
+import getShippingOptions from "../actions/getShippingOptions"
 import CartClient from "../components/cart/CartClient"
 
-const Cart = () => {
+const Cart = async () => {
+
+  const shippingOptions = await getShippingOptions()
   return (
     <div>
-      <CartClient />
+      <CartClient shippingOptions={shippingOptions}/>
     </div>
   )
 }

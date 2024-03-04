@@ -1,9 +1,15 @@
+import getAddresses from "../actions/getAddresses"
+import { getCurrentUser } from "../actions/getCurrentUser"
 import CheckoutClient from "../components/checkout/CheckoutClient"
 
-const Checkout = () => {
+const Checkout = async() => {
+
+  const currentUser = await getCurrentUser()
+  const addresses = await getAddresses({ userId: currentUser?.id })
+
   return (
     <div>
-        <CheckoutClient />
+        <CheckoutClient currentUser={currentUser} addresses={addresses} />
     </div>
   )
 }

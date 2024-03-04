@@ -1,5 +1,5 @@
 import { FaCartShopping } from "react-icons/fa6"
-import { MdCreate, MdDashboard } from "react-icons/md"
+import { MdCreate, MdDashboard, MdLocalShipping } from "react-icons/md"
 import AdminSidebarItem from "./AdminSidebarItem"
 
 const AdminSidebar = () => {
@@ -14,6 +14,11 @@ const AdminSidebar = () => {
       title: "Products",
       icon: <MdCreate/>,
       redirectUrl: "/admin/products"
+    },
+    {
+      title: "Shipping",
+      icon: <MdLocalShipping/>,
+      redirectUrl: "/admin/shipping"
     },
     {
       title: "Orders",
