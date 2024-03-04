@@ -1,7 +1,7 @@
 import getShippingOptions from '@/app/actions/getShippingOptions'
 import AdminShippingClient from '@/app/components/admin/shipping/AdminShippingClient'
 
-const Shipping = async () => {
+const AdminShipping = async () => {
 
   const shippingOptions = await getShippingOptions()
   return (
@@ -11,4 +11,4 @@ const Shipping = async () => {
   )
 }
 
-export default Shipping
+export default AdminShipping

@@ -122,7 +122,7 @@ const DetailClient = ({ product }: { product: any }) => {
                 <div className="flex">
                     <div className="basis-1/2 bg-white px-5 py-10 border-r-2 border-b-2">
                         <div className="relative w-[400px] h-[400px] m-auto">
-                            <Image src={product?.image} fill alt={product?.title} className="rounded-l" />
+                            <Image src={product?.image} fill alt={product?.title} className="rounded-l object-contain object-center" />
                         </div>
                     </div>
                     <div className="basis-1/2 space-y-6 bg-neutral-100 py-4 ps-8 pe-2">
@@ -171,13 +171,13 @@ const DetailClient = ({ product }: { product: any }) => {
 
                             <Counter handleIncrease={handleIncrease} handleDecrease={handleDecrease} cartProduct={cartProduct} />
                             <div>
-                                <Button icon={ <FaHeart size={18} />} outlined isPrimary/>
+                                <Button iconBegin={ <FaHeart size={18} />} outlined innerHeight={3} color="primary"/>
                             </div>
                         </div>
 
                         <div className="flex flex-col pt-1 gap-y-2">
-                            <Button text="Add to Cart" onClick={() => handleAddToCart()} isPrimary={true} icon={<FaCartShopping />} />
-                            <Button text="Buy now" onClick={() => handleAddToCart(true)} isPrimary={false} />
+                            <Button text="Add to Cart" onClick={() => handleAddToCart()} color="primary" iconBegin={<FaCartShopping />} innerHeight={4}/>
+                            <Button text="Buy now" onClick={() => handleAddToCart(true)} color="secondary" innerHeight={4} />
                         </div>
                     </div>
                 </div>

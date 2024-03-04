@@ -1,17 +1,17 @@
 import getAddresses from '@/app/actions/getAddresses'
 import { getCurrentUser } from '@/app/actions/getCurrentUser'
-import AddressesClient from '@/app/components/user/addresses/AddressesClient'
+import UserAddressesClient from '@/app/components/user/addresses/UserAddressesClient'
 
-const MyAddresses = async () => {
+const UserAddresses = async () => {
 
   const currentUser = await getCurrentUser()
   const addresses = await getAddresses({ userId: currentUser?.id })
 
   return (
     <div>
-     <AddressesClient currentUser={currentUser} addresses={addresses}/>
+     <UserAddressesClient currentUser={currentUser} addresses={addresses}/>
     </div>
   )
 }
 
-export default MyAddresses
+export default UserAddresses

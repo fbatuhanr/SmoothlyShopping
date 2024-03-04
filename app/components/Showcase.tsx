@@ -18,7 +18,7 @@ const Showcase: React.FC<IShowcase> = ({ title, products, limit }) => {
                 title &&
                 <div className="px-10 py-6 w-3/4 mx-auto mb-6">
                     <div className="flex justify-between items-center">
-                        <Heading text={title} />
+                        <Heading text={title} textSize="3xl" />
                         {
                             products &&
                             <div className="flex items-center gap-x-1 text-2xl text-slate-700">

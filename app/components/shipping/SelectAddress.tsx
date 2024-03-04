@@ -4,6 +4,7 @@ import { Address, User } from '@prisma/client'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { MdError } from 'react-icons/md'
 
 interface SelectAddressProps {
     currentUser: User
@@ -18,7 +19,7 @@ const SelectAddress: React.FC<SelectAddressProps> = ({ currentUser, addresses })
             billingAddressId: currentUser.billingAddressId
         }
     })
-    
+
     /* 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         console.log(data)
@@ -74,14 +75,26 @@ const SelectAddress: React.FC<SelectAddressProps> = ({ currentUser, addresses })
 
     return (
         <div className="flex w-full">
-            <div className="basis-1/2 p-2">
-                <div className="text-xl">Delivery Addresses</div>
-                <div><RadioOptions id="deliveryAddressId" radioOptions={formattedAddresses} register={register} errors={errors} required/></div>
-            </div>
-            <div className="basis-1/2 p-2">
-                <div className="text-xl">Billing Addresses</div>
-                <div><RadioOptions id="billingAddressId" radioOptions={formattedAddresses} register={register} errors={errors} required/></div>
-            </div>
+            {
+            addresses.length 
+                ?
+                <>
+                    <div className="basis-1/2 p-2">
+                        <div className="text-xl">Delivery Addresses</div>
+                        <div><RadioOptions id="deliveryAddressId" radioOptions={formattedAddresses} register={register} errors={errors} required /></div>
+                    </div>
+                    <div className="basis-1/2 p-2">
+                        <div className="text-xl">Billing Addresses</div>
+                        <div><RadioOptions id="billingAddressId" radioOptions={formattedAddresses} register={register} errors={errors} required /></div>
+                    </div>
+                </>
+                :
+                <div className="w-full flex justify-center items-center gap-x-1 text-xl font-medium text-slate-900 py-10">
+                    You don't have a address yet, you can create address by filling below form.
+                    <MdError />
+                </div>
+            }
+
         </div>
     )
 }

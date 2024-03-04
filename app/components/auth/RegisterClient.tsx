@@ -88,7 +88,7 @@ const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
   return (
     <AuthContainer>
       <div className="w-full md:w-[500px] p-3 shadow-lg rounded-md">
-        <Heading text="Register" center />
+        <Heading text="Register" textSize="4xl" center />
         {
           !isLoading
             ?
@@ -100,9 +100,9 @@ const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
               <div className="my-4 text-center">
                 <Link className="underline" href="/login">Click here for Login!</Link>
               </div>
-              <Button text="Register" onClick={handleSubmit(onSubmit)} />
+              <Button text="Register" onClick={handleSubmit(onSubmit)}  color="secondary" size="lg" innerHeight={3} />
               <div className="text-center my-1">OR</div>
-              <Button text="Register with Google" onClick={() => signIn("google")} icon={<FaGoogle />} />
+              <Button text="Register with Google" onClick={() => signIn("google")} color="secondary" size="lg" iconBegin={<FaGoogle />} innerHeight={3} />
             </>
             :
             <LoadingSpinner />

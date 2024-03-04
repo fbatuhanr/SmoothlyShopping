@@ -89,9 +89,9 @@ const AdminShippingClient: React.FC<ShippingOptionsProps> = ({ shippingOptions }
     }
 
     return (
-        <div className="w-full md:w-3/4 m-auto">
-            <Heading text="Shipping Options" subText="Edit shipping options..." border />
-            <div className="mt-8">
+        <div className="w-full px-5">
+            <Heading text="Shipping Options" textSize="3xl" subText="Edit shipping options..." subTextSize="base" border />
+            <div className="w-full md:w-3/4 m-auto mt-8">
                 <div className="flex justify-between text-lg font-medium">
                     <div className="basis-5/12">Shipping Name</div>
                     <div className="basis-5/12">Shipping Price</div>

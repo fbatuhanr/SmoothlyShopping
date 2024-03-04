@@ -85,7 +85,7 @@ const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
   return (
     <AuthContainer>
       <div className="w-full md:w-[500px] p-3 shadow-lg rounded-md">
-        <Heading text="Login" center />
+        <Heading text="Login" textSize="4xl" center />
         {
           !isLoading
             ?
@@ -96,9 +96,9 @@ const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
               <div className="my-4 text-center">
                 <Link className="underline" href="/register">Click here for Register!</Link>
               </div>
-              <Button text="Login" onClick={handleSubmit(onSubmit)} />
+              <Button text="Login" onClick={handleSubmit(onSubmit)} color="secondary" size="lg" innerHeight={3} />
               <div className="text-center my-1">OR</div>
-              <Button text="Login with Google" onClick={() => signIn("google")} icon={<FaGoogle />} />
+              <Button text="Login with Google" onClick={() => signIn("google")} color="secondary" size="lg" iconBegin={<FaGoogle />} innerHeight={3} />
             </>
             :
             <LoadingSpinner />

@@ -35,9 +35,12 @@ export const checkoutSlice = createSlice({
     },
     setTotalCost: (state, action: PayloadAction<number>) => {
       state.totalCost = action.payload
+    },
+    clearCheckout: (state) => {
+      state = initialState
     }
   }
 })
 
-export const { setShippingOption, setItemsCost, setTotalCost } = checkoutSlice.actions
+export const { setShippingOption, setItemsCost, setTotalCost, clearCheckout } = checkoutSlice.actions
 export default checkoutSlice.reducer

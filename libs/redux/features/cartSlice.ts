@@ -2,7 +2,6 @@ import { CartProductProps } from '@/app/components/detail/DetailClient'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-
 interface CartState {
   isEnabled: boolean
   items: Array<CartProductProps>
@@ -11,17 +10,6 @@ const initialState: CartState = {
   isEnabled: false,
   items: []
 }
-
-/*
-export const createStream = createAsyncThunk(
-  'streams/createStream',
-  async (formValues, thunkAPI) => {
-    const { userId } = thunkAPI.getState().auth;
-    const response = await streams.post('/streams', { ...formValues, userId });
-    return response.data;
-  }
-);
-*/
 
 export const cartSlice = createSlice({
   name: "cart",
@@ -45,18 +33,9 @@ export const cartSlice = createSlice({
       state.items[itemIndexInCart].quantity = action.payload[1]
     },
     clearCart: (state) => {
-      state.items = []
+      state = initialState
     }
-  },
-  /*
-  I will use it when async request (for example axios call)
-  extraReducers: (builder) => {
-    builder.addCase(createStream.fulfilled, (state, action) => {
-      const navigate = useNavigate()
-      state[action.payload.id] = action.payload;
-      navigate("/")
-    });
-  },*/
+  }
 })
 
 export const { toggleCart, addToCart, removeFromCart, updateCart, clearCart } = cartSlice.actions

@@ -1,6 +1,6 @@
-const textClip = (text: string) => {
-    if(text.length < 20) return text;
-    return `${text.substring(0, 17)}...`
+const textClip = (text: string, maxLen:number = 20) => {
+    if(text.length < maxLen) return text;
+    return `${text.substring(0, maxLen-3)}...`
 }
 
 export default textClip

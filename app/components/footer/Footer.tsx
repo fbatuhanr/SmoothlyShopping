@@ -4,6 +4,7 @@ import { IoQrCodeOutline } from "react-icons/io5";
 import { TbTruckReturn } from "react-icons/tb";
 
 import { FaInstagram, FaYoutube, FaFacebook, FaTiktok } from "react-icons/fa6";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -88,7 +89,7 @@ const Footer = () => {
         <div className="bg-black flex items-center px-6 gap-x-4 min-h-10">
           <div className="text-xs text-white flex-1">All rights reserved © Copyright 2024</div>
           <div className="text-xs text-blue-100"><a href="https://github.com/fbatuhanr/" target="_blank">fbatuhanr</a></div>
-          <div className="text-sm text-white">SmoothlyShopping</div>
+          <div className="text-sm text-white"><Link href="/">SmoothlyShopping</Link></div>
         </div>
     </footer>
   )

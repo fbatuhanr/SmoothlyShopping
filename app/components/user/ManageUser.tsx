@@ -159,7 +159,7 @@ const ManageUser: React.FC<ManageUserProps> = ({ currentUser }) => {
                                 <Input id="name" type="text" defaultValue={currentUser?.name || ""} placeholder="Name..." register={register} errors={errors} required />
                                 <Input id="email" type="text" defaultValue={currentUser?.email || ""} placeholder="Email..." register={register} errors={errors} required />
                                 <InputFile id="image" register={register} errors={errors} />
-                                <Button text="Update" onClick={handleSubmit(onSubmit)} />
+                                <Button text="Update" onClick={handleSubmit(onSubmit)} color="primary" innerHeight={3} />
                             </div>
                         </div>
                         <div className="px-4 py-4">

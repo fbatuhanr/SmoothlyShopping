@@ -7,7 +7,7 @@ import { CartProductProps } from "../detail/DetailClient";
 import Image from "next/image";
 import priceFormat from "@/utils/PriceFormat";
 import { MdAlternateEmail, MdCreditCard, MdLocalShipping, MdOutlineFileDownloadDone } from "react-icons/md";
-import { Address, OrderStatusEnum, User } from "@prisma/client";
+import { Address, OrderStatusEnum, Prisma, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { GiConvergenceTarget } from "react-icons/gi";
 import { CiReceipt } from "react-icons/ci";
@@ -17,6 +17,8 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Button from "../general/clickable/Button";
+import { clearCart } from "@/libs/redux/features/cartSlice";
+import { clearCheckout } from "@/libs/redux/features/checkoutSlice";
 
 
 interface ManageAddressesProps {
@@ -75,16 +77,19 @@ const CheckoutClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses
             status: OrderStatusEnum.Processing,
             itemsCost,
             totalCost,
-            deliveryAddressId: deliveryAddress.id,
-            billingAddressId: billingAddress.id,
-            items
+            items,
+            deliveryAddress,
+            billingAddress,
         }
 
         axios.post("/api/order", resultData)
             .then(() => {
                 toast.success("Order created successfully!")
-                reset();
-                router.refresh()
+                
+                dispatch(clearCart())
+                dispatch(clearCheckout())
+
+                router.push("/user/orders")
             })
             .catch((error: AxiosError) => {
                 console.log(error, "error")
@@ -100,7 +105,7 @@ const CheckoutClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses
                     <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6 overflow-y-scroll max-h-72">
                         {
                             items.map((item: CartProductProps) =>
-                                <div className="flex flex-col rounded-lg bg-white sm:flex-row">
+                                <div key={item.id} className="flex flex-col rounded-lg bg-white sm:flex-row">
                                     <div className="relative m-2 h-24 w-28 border rounded-md">
                                         <Image src={item.image} alt={item.title} fill className="object-cover object-center" />
                                     </div>
@@ -220,8 +225,8 @@ const CheckoutClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses
                                     <MdCreditCard />
                                 </div>
                             </div>
-                                <Input id="cardExpiration" type="text" placeholder="MM/YY" register={register} errors={errors} required />
-                                <Input id="cardCvc" type="text" placeholder="CVC" register={register} errors={errors} required />
+                            <Input id="cardExpiration" type="text" placeholder="MM/YY" register={register} errors={errors} required />
+                            <Input id="cardCvc" type="text" placeholder="CVC" register={register} errors={errors} required />
                         </div>
 
                         <div className="mt-6 border-t border-b py-2">

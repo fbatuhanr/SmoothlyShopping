@@ -1,8 +1,8 @@
 
-const MyPaymentMethods = () => {
+const UserPaymentMethods = () => {
   return (
-    <div>MyPaymentMethods</div>
+    <div>Coming soon...</div>
   )
 }
 
-export default MyPaymentMethods
+export default UserPaymentMethods
