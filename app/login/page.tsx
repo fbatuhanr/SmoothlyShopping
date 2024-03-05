@@ -1,14 +1,12 @@
-import { getCurrentUser } from "../actions/getCurrentUser"
 import LoginClient from "../components/auth/LoginClient"
+import GuestGuard from "../guards/GuestGuard"
 
-const Login = async () => {
-
-  const currentUser = await getCurrentUser()
+const Login = () => {
 
   return (
-    <div>
-        <LoginClient currentUser={currentUser} />
-    </div>
+    <GuestGuard>
+      <LoginClient />
+    </GuestGuard>
   )
 }
 

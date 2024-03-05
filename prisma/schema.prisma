@@ -27,15 +27,39 @@ model Account {
 }
 
 model Product {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
-  brand       String
-  price       Float
-  category    String
-  inStock     Boolean
-  image       String
-  reviews     Review[]
+
+  brand   Brand  @relation(fields: [brandId], references: [id])
+  brandId String @db.ObjectId
+
+  price Float
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @db.ObjectId
+
+  inStock Boolean
+  image   String
+  reviews Review[]
+}
+
+model Brand {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String  @unique
+  description String?
+
+  products Product[]
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String  @unique
+  description String?
+  logo        String?
+  banner      String?
+
+  products Product[]
 }
 
 model Review {
@@ -69,7 +93,7 @@ model User {
 
   addresses Address[]
 
-  Order Order[]
+  orders Order[]
 }
 
 enum Role {

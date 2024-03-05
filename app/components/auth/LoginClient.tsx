@@ -9,29 +9,17 @@ import Input from "../general/Input"
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
 
 import { toast } from 'react-toastify';
-import { useEffect, useState } from "react"
-import { Spinner } from "flowbite-react"
-import { User } from "@prisma/client"
+import { useState } from "react"
 import LoadingSpinner from "../general/LoadingSpinner"
+import { useRouter } from "next/navigation"
 
-interface LoginClientProps {
-  currentUser: User | null | undefined | any
-}
-
-const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
+const LoginClient = () => {
 
   const router = useRouter()
-  if(currentUser){
 
-    window.location.href = "/"
-    // router.refresh()
-    return
-  }
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FieldValues>()
   const onSubmit: SubmitHandler<FieldValues> = (data) => {

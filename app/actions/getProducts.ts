@@ -43,9 +43,14 @@ export default async function getProducts(params: IProductParams){
                     orderBy: {
                         createdAt: "desc"
                     }
-                }
+                },
+                category: true,
+                brand: true
             }
         })
+
+        if(!products)
+        return null
 
         return products
     }

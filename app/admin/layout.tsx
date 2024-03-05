@@ -1,23 +1,18 @@
-import React from 'react'
 import AdminSidebar from '../components/admin/sidebar/AdminSidebar'
 import ManageContainer from '../components/containers/ManageContainer'
-import { getCurrentUser } from '../actions/getCurrentUser'
+import AdminGuard from '../guards/AdminGuard'
 
-const AdminLayout = async({ children }: { children: React.ReactNode }) => {
-  
-  const currentUser = await getCurrentUser()
-  if (!currentUser || currentUser.role !== "ADMIN") {
-    
-    return null
-  }
+const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
-    <div className="flex">
-      <AdminSidebar />
-      <ManageContainer>
-        {children}
-      </ManageContainer>
-    </div>
+    <AdminGuard>
+      <div className="flex">
+        <AdminSidebar />
+        <ManageContainer>
+          {children}
+        </ManageContainer>
+      </div>
+    </AdminGuard>
   )
 }
 

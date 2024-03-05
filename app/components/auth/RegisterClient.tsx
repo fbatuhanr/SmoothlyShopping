@@ -13,15 +13,9 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import { toast } from 'react-toastify';
-import { useEffect, useState } from "react"
-import { User } from "@prisma/client"
+import { useState } from "react"
 import LoadingSpinner from "../general/LoadingSpinner"
-
-interface RegisterClientProps {
-  currentUser: User | null | undefined | any
-}
-
-const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
+const RegisterClient = () => {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -75,15 +69,6 @@ const RegisterClient: React.FC<RegisterClientProps> = ({ currentUser }) => {
       setIsLoading(false)
     })
   }
-
-  useEffect(() => {
-
-    if (currentUser) {
-
-      router.push("/")
-      router.refresh()
-    }
-  }, [])
 
   return (
     <AuthContainer>

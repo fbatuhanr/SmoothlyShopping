@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form"
 
 interface RadioOptionsProps {
@@ -29,8 +30,8 @@ const RadioOptions: React.FC<RadioOptionsProps> = ({ id, label, radioOptions, is
                                     {...register(id)} 
                                     disabled={disabled}
                                 />
-                                <label htmlFor={option.id ? `${id}-${option.id}` : option.title} className="flex items-center gap-x-2 w-full py-3 ms-2 text-sm font-medium text-gray-900">
-                                    {option.icon}
+                                <label htmlFor={option.id ? `${id}-${option.id}` : option.title} className="relative flex items-center gap-x-2 w-full py-3 ms-2 text-sm font-medium text-gray-900">
+                                    {option.logo && <Image src={option.logo} alt={option.title} width={16} height={16} className="object-contain"/>}
                                     {option.title} 
                                 </label>
                             </div>

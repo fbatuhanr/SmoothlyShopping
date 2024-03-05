@@ -1,6 +1,6 @@
 "use client"
 
-import { Product } from "@prisma/client"
+import { Prisma, Product } from "@prisma/client"
 import React, { useCallback } from "react"
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { toast } from "react-toastify";
@@ -10,24 +10,30 @@ import Image from "next/image";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@/libs/firebase";
 
-interface ManageProductsProps {
-    products: Product[]
-}
 
-const ManageProducts: React.FC<ManageProductsProps> = ({ products }) => {
+/*
+const productWithCategoriesBrands = Prisma.validator<Prisma.ProductDefaultArgs>()({
+    include: { category: true, brand: true },
+})
+type WithPosts = Prisma.UserGetPayload<typeof productWithCategoriesBrands>
+*/
+
+const AdminManageProducts: React.FC<any> = ({ products }) => {
 
     const router = useRouter()
 
+    console.log(products)
+
     let rows: any = []
     if (products) {
-        rows = products.map((product) => {
+        rows = products.map((product:any) => {
             return {
                 id: product.id,
                 image: product.image,
                 title: product.title,
                 price: product.price,
-                category: product.category,
-                brand: product.brand,
+                category: product.category.title,
+                brand: product.brand.title,
                 inStock: product.inStock
             }
         })
@@ -68,7 +74,7 @@ const ManageProducts: React.FC<ManageProductsProps> = ({ products }) => {
             renderCell: (params) => {
                 return (
                     <button onClick={() => handleDelete(params.row.id, params.row.image)} className="mx-4 text-red-500 cursor-pointer ">
-                        Sil
+                        Delete
                     </button>
                 )
             }
@@ -90,7 +96,7 @@ const ManageProducts: React.FC<ManageProductsProps> = ({ products }) => {
                 })
                 .catch((error: any) => {
                     console.log(error)
-            })
+                })
 
         } catch (error) {
             return console.log("Delete Error!", error)
@@ -114,4 +120,4 @@ const ManageProducts: React.FC<ManageProductsProps> = ({ products }) => {
     )
 }
 
-export default ManageProducts
+export default AdminManageProducts
