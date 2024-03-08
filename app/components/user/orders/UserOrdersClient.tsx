@@ -25,45 +25,49 @@ const UserOrdersClient: React.FC<UserOrdersClientProps> = ({ orders }) => {
 
           return (
             <div className="border-2 p-4">
-              <div className="flex justify-between gap-x-10 border-b text-xl font-semibold">
-                <div className="w-1/12">Order ID</div>
-                <div className="w-4/12">Products</div>
-                <div className="w-2/12">Subtotal</div>
-                <div className="w-2/12">Total</div>
-                <div className="w-2/12">Status</div>
-              </div>
-              <div className="flex items-center justify-between text-lg">
-                <div className="w-1/12 break-words">{order.id}</div>
-                <div className="w-4/12">
-                  {
-                    order.items && Object.values(order.items).map((item: CartProductProps) =>
-                      <div className="flex items-center gap-x-4 rounded-lg bg-white p-2">
-                        <div className="relative h-16 w-20 border rounded-md">
-                          <Image src={item.image} alt={item.title} fill className="object-contain object-center" />
-                        </div>
-                        <div className="flex w-full flex-col">
-                          <div className="font-semibold">{item.title}</div>
-                          <div className="float-right text-gray-400 ">{item.brand}</div>
-                          <div className="text-lg font-bold">{priceFormat(item.price)} x {item.quantity}</div>
-                        </div>
-                      </div>
-                    )
-                  }
-                </div>
-                <div className="w-2/12 font-semibold">{priceFormat(order.itemsCost)}</div>
-                <div className="w-2/12 font-semibold">{priceFormat(order.totalCost)}</div>
-                <div className="w-2/12 font-bold">{order.status}</div>
-              </div>
-              <div className="flex items-center justify-between border-t pt-2">
-                <div className="flex items-center">
-                  <div className="text-lg font-semibold">Delivery Address&nbsp;</div>
-                  <div className="text-base">{formattedDeliveryAddress}</div>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-lg font-semibold">Billing Address&nbsp;</div>
-                  <div className="text-base">{formattedBillingAddress}</div>
-                </div>
-              </div>
+              <table className="table-fixed">
+                <thead className="text-left border-b text-xl font-semibold">
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Products</th>
+                    <th>Subtotal</th>
+                    <th>Shipping</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="text-lg">
+                    <td className="py-4 max-w-16 pr-4 break-words">{order.id}</td>
+                    <td>
+                      {
+                        order.items && Object.values(order.items).map((item: CartProductProps) =>
+                          <div className="flex items-center gap-x-4 rounded-lg bg-white p-2">
+                            <div className="relative h-16 w-20 border rounded-md">
+                              <Image src={item.image} alt={item.title} fill className="object-contain object-center" />
+                            </div>
+                            <div className="flex w-full flex-col">
+                              <div className="font-semibold">{item.title}</div>
+                              <div className="float-right text-gray-400 ">{item.brand}</div>
+                              <div className="text-lg font-bold">{priceFormat(item.price)} x {item.quantity}</div>
+                            </div>
+                          </div>
+                        )
+                      }
+                    </td>
+                    <td>{priceFormat(order.itemsCost)}</td>
+                    <td>{order.shippingOption}</td>
+                    <td>{priceFormat(order.totalCost)}</td>
+                    <td>{order.status}</td>
+                  </tr>
+                </tbody>
+                <tfoot className="border-t">
+                  <tr>
+                    <td colSpan={3} className="pr-4">Delivery Address: <br/> {formattedDeliveryAddress}</td>
+                    <td colSpan={3} className="pl-4">Billing Address: <br/> {formattedBillingAddress}</td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           )
         })

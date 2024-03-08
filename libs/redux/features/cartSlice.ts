@@ -33,7 +33,7 @@ export const cartSlice = createSlice({
       state.items[itemIndexInCart].quantity = action.payload[1]
     },
     clearCart: (state) => {
-      state = initialState
+      state.items = []
     }
   }
 })

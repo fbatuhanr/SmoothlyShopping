@@ -4,7 +4,7 @@ import { Tabs } from 'flowbite-react';
 import { IoMdAdd } from "react-icons/io";
 import { FaList } from 'react-icons/fa';
 
-import { Brand, Category, Product } from '@prisma/client';
+import { Brand, Category, Prisma, Product } from '@prisma/client';
 
 import AdminAddProduct from './AdminAddProduct';
 import AdminProductCategories from './AdminProductCategories';
@@ -15,9 +15,15 @@ import { MdBrandingWatermark, MdCategory } from 'react-icons/md';
 import React from 'react';
 import AdminProductBrands from './AdminProductBrands';
 
+
+type ProductWithBrandCategory = Prisma.ProductGetPayload<{
+    include: { brand: true, category: true }
+}>
+type ProductWithPayload = Product & ProductWithBrandCategory;
+
 interface AdminProductsClientProps {
 
-    products: Array<Product>
+    products: Array<ProductWithPayload>
     categories: Array<Category>
     brands: Array<Brand>
 }

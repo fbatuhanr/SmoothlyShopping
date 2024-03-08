@@ -1,3 +1,4 @@
+import getCategories from '@/app/actions/getCategories';
 import getProductsId from '@/app/actions/getProductsId';
 import DetailClient from '@/app/components/detail/DetailClient'
 import { Suspense } from 'react';
@@ -7,11 +8,13 @@ type DetailProps = {
 }
 const Detail = async ({params}: {params: DetailProps}) => {
 
+  const categories = await getCategories()
+
   const {productId} = params;
   const product = await getProductsId({productId})
   
   return (
-    <DetailClient product={product} />
+    <DetailClient categories={categories} product={product} />
   )
 }
 

@@ -19,7 +19,9 @@ export default async function getProductsId(params: IParams){
                     orderBy: {
                         createdAt: "desc"
                     }
-                }
+                },
+                category: true,
+                brand: true
             }
             
         })

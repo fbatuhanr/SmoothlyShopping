@@ -37,7 +37,9 @@ export const checkoutSlice = createSlice({
       state.totalCost = action.payload
     },
     clearCheckout: (state) => {
-      state = initialState
+      state.shippingOption = { id: "", name: "", price: 0 }
+      state.itemsCost = 0
+      state.totalCost = 0
     }
   }
 })

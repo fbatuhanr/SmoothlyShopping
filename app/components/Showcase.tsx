@@ -1,15 +1,21 @@
-import { Product } from '@prisma/client'
+import { Prisma, Product } from '@prisma/client'
 import Heading from './general/Heading'
 import ProductCard from './home/ProductCard'
 import { FiPackage } from 'react-icons/fi'
 import { MdError } from 'react-icons/md'
 
+type ProductWithBrandCategory = Prisma.ProductGetPayload<{
+    include: { brand: true, category: true }
+}>
+type ProductWithPayload = Product & ProductWithBrandCategory;
+
 interface IShowcase {
     title?: string
-    products?: Array<Product>
+    products?: Array<ProductWithPayload>
     limit?: number
 }
-const Showcase: React.FC<IShowcase> = ({ title, products, limit }) => {
+
+const Showcase: React.FC<IShowcase> = ({ title, products, limit  }) => {
 
     products = limit ? products?.slice(0, limit) : products
     return (

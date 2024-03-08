@@ -73,7 +73,7 @@ const LoginClient = () => {
   return (
     <AuthContainer>
       <div className="w-full md:w-[500px] p-3 shadow-lg rounded-md">
-        <Heading text="Login" textSize="4xl" center />
+        <Heading text="Login" textSize="3xl" center />
         {
           !isLoading
             ?

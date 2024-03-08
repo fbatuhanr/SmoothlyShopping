@@ -11,14 +11,17 @@ import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@/libs/firebase";
 
 
-/*
-const productWithCategoriesBrands = Prisma.validator<Prisma.ProductDefaultArgs>()({
-    include: { category: true, brand: true },
-})
-type WithPosts = Prisma.UserGetPayload<typeof productWithCategoriesBrands>
-*/
+type ProductWithBrandCategory = Prisma.ProductGetPayload<{
+    include: { brand: true, category: true }
+}>
+type ProductWithPayload = Product & ProductWithBrandCategory;
 
-const AdminManageProducts: React.FC<any> = ({ products }) => {
+interface AdminManageProductsProps {
+
+    products: Array<ProductWithPayload>
+}
+
+const AdminManageProducts: React.FC<AdminManageProductsProps> = ({ products }) => {
 
     const router = useRouter()
 

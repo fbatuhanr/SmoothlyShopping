@@ -76,6 +76,7 @@ const CheckoutClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses
             userId: currentUser.id,
             status: OrderStatusEnum.Processing,
             itemsCost,
+            shippingOption: `${shippingOption.name} - ${priceFormat(shippingOption.price)}`,
             totalCost,
             items,
             deliveryAddress,
@@ -89,7 +90,7 @@ const CheckoutClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses
                 dispatch(clearCart())
                 dispatch(clearCheckout())
 
-                router.push("/user/orders")
+                router.push("/")
             })
             .catch((error: AxiosError) => {
                 console.log(error, "error")

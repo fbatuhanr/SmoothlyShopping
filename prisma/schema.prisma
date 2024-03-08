@@ -132,6 +132,7 @@ model Order {
   status OrderStatusEnum
 
   itemsCost Float
+  shippingOption String
   totalCost Float
 
   items Json

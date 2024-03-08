@@ -26,6 +26,8 @@ import { toast } from "react-toastify";
 import Faq from "./faq/Faq";
 import Description from "./description/Description";
 import Return from "./return/Return";
+import { Category, Prisma, Product } from "@prisma/client";
+import Link from "next/link";
 
 
 const customTheme: CustomFlowbiteTheme = {
@@ -71,7 +73,17 @@ export type CartProductProps = {
     image: string,
     inStock: boolean
 }
-const DetailClient = ({ product }: { product: any }) => {
+
+type ProductWithBrandCategoryReviews = Prisma.ProductGetPayload<{
+    include: { brand: true, category: true, reviews: true }
+}>
+type ProductWithPayload = Product & ProductWithBrandCategoryReviews;
+
+interface DetailClientProps {
+    categories: Array<Category>
+    product: ProductWithPayload
+}
+const DetailClient:React.FC<DetailClientProps> = ({ categories, product }) => {
 
     const router = useRouter()
     const dispatch = useAppDispatch()
@@ -80,13 +92,15 @@ const DetailClient = ({ product }: { product: any }) => {
         id: product.id,
         title: product.title,
         description: product.description,
-        brand: product.brand,
+        brand: product.brand.title,
         price: product.price,
-        category: product.category,
+        category: product.category.title,
         quantity: 1,
         image: product.image,
         inStock: product.inStock
     })
+
+    console.log(product.category.title)
 
     const reviewCount = product?.reviews?.length
     const reviewRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount || null
@@ -117,8 +131,8 @@ const DetailClient = ({ product }: { product: any }) => {
     }, [])
 
     return (
-        <PageContainer activeCategory={product?.category}>
-            <div className="flex flex-1 flex-col gap-y-6 min-h-96 w-full max-w-screen-lg">
+        <PageContainer activeCategory={product?.category.title} categories={categories}>
+            <div className="flex flex-1 flex-col gap-y-6 min-h-96 w-full max-w-screen-lg mt-8">
                 <div className="flex">
                     <div className="basis-1/2 bg-white px-5 py-10 border-r-2 border-b-2">
                         <div className="relative w-[400px] h-[400px] m-auto">
@@ -131,11 +145,11 @@ const DetailClient = ({ product }: { product: any }) => {
                                 <span className="px-2.5 py-0.5 text-xs text-orange-600 bg-orange-100 rounded-xl">New Arrival</span>
                             </div>
                             <div className="flex justify-between">
-                                <h1 className={`${roboto.className} text-xl text-slate-800`}>
+                                <h1 className={`${roboto.className} text-2xl text-slate-800`}>
                                     {product?.title}
                                 </h1>
-                                <h2 className={`${roboto.className} text-lg text-slate-600`}>
-                                    {product?.brand}
+                                <h2 className={`${roboto.className} text-lg text-slate-600 font-semibold`}>
+                                    <Link href={`/brand/${product?.brand.title}?id=${product?.brand.id}`}>{product?.brand.title}</Link>
                                 </h2>
                             </div>
                             <div className="flex justify-between items-end ps-1 pt-1">

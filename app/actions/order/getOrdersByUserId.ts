@@ -10,6 +10,9 @@ export default async function getOrdersByUserId(params: IParams){
         const orders = await prisma.order.findMany({
             where: {
                 userId: userId
+            },
+            orderBy: {
+                createdAt: "desc"
             }
         })
 
