@@ -3,7 +3,7 @@
 ### Screen Record (user)
 https://github.com/fbatuhanr/SmoothlyShopping/assets/34348780/533142c3-d276-488a-86e9-e2f8d9df90b3
 ### Screen Record (admin)
-https://github.com/fbatuhanr/SmoothlyShopping/assets/34348780/24b89873-f1e3-40f7-8e5d-cf87742a87334d
+https://github.com/fbatuhanr/SmoothlyShopping/assets/34348780/162e91de-65d1-4d05-b43c-c29d63b4e3e3
 
 #### Screenshots (user)
 ![smoothlyshopping-ss-user-1](https://github.com/fbatuhanr/SmoothlyShopping/assets/34348780/273ea0d6-4b0e-46fe-9da5-d0163eb6041d)
