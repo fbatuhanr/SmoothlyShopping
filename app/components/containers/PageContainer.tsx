@@ -11,7 +11,7 @@ interface PageContainerProps {
 
 const PageContainer: React.FC<PageContainerProps> = ({ activeCategory, categories, children }) => {
 
-  const activeCategoryBannerUrl = categories.find(cat => cat.title == activeCategory)?.banner
+  const activeCategoryBannerUrl = categories?.find(cat => cat.title == activeCategory)?.banner
 
   return (
     <div className="flex flex-col items-center bg-neutral-100">
@@ -22,7 +22,7 @@ const PageContainer: React.FC<PageContainerProps> = ({ activeCategory, categorie
         {
           activeCategoryBannerUrl &&
           <div className="absolute top-0 left-0 right-0 bottom-0 w-4/5 mx-auto h-48 brightness-50">
-            <Image src={activeCategoryBannerUrl} fill className="rounded-b-lg object-cover object-center" />
+            <Image src={activeCategoryBannerUrl} fill alt="Category Banner" className="rounded-b-lg object-cover object-center" />
           </div>
         }
       </div>

@@ -5,15 +5,15 @@ import Image from "next/image"
 import { FaCartShopping, FaHeart } from "react-icons/fa6";
 
 import { Roboto } from "next/font/google"
-const roboto = Roboto({subsets: ['latin'], weight: ['400', '500', '700', '900']})
+const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700', '900'] })
 
-import { Flowbite, CustomFlowbiteTheme, Tabs } from 'flowbite-react';
+import { Flowbite, CustomFlowbiteTheme, Tabs, Modal, Textarea } from 'flowbite-react';
 import { MdOutlineDescription, MdOutlineQuestionAnswer, MdOutlineReviews, MdOutlineAssignmentReturn } from 'react-icons/md';
 import Counter from "../general/Counter"
 import { useEffect, useState } from "react"
 import Button from "../general/clickable/Button"
 
-import { Rating as MuiRating } from "@mui/material";
+import { Rating as MuiRating, Rating } from "@mui/material";
 import Reviews from "./reviews/Reviews";
 
 import { useAppDispatch } from "@/libs/redux/hooks";
@@ -26,9 +26,10 @@ import { toast } from "react-toastify";
 import Faq from "./faq/Faq";
 import Description from "./description/Description";
 import Return from "./return/Return";
-import { Category, Prisma, Product } from "@prisma/client";
+import { Category, Order, Prisma, Product, Review, User } from "@prisma/client";
 import Link from "next/link";
-
+import LeaveFeedback from "./leave-feedback/LeaveFeedback";
+import LoadingSpinnerFullScreen from "../general/LoadingSpinnerFullScreen";
 
 const customTheme: CustomFlowbiteTheme = {
     tabs: {
@@ -74,21 +75,23 @@ export type CartProductProps = {
     inStock: boolean
 }
 
-type ProductWithBrandCategoryReviews = Prisma.ProductGetPayload<{
-    include: { brand: true, category: true, reviews: true }
-}>
+type UserWithOrdersReviews = Prisma.UserGetPayload<{ include: {orders: true, reviews: true} }>
+type UserWithPayload = User & UserWithOrdersReviews;
+
+type ProductWithBrandCategoryReviews = Prisma.ProductGetPayload<{ include: { brand: true, category: true, reviews: true }}>
 type ProductWithPayload = Product & ProductWithBrandCategoryReviews;
 
 interface DetailClientProps {
     categories: Array<Category>
     product: ProductWithPayload
+    currentUser: UserWithPayload
 }
-const DetailClient:React.FC<DetailClientProps> = ({ categories, product }) => {
+const DetailClient: React.FC<DetailClientProps> = ({ categories, product, currentUser }) => {
 
     const router = useRouter()
     const dispatch = useAppDispatch()
-    
-    const [cartProduct, setcartProduct] = useState<CartProductProps>({
+
+    const [cartProduct, setCartProduct] = useState<CartProductProps>({
         id: product.id,
         title: product.title,
         description: product.description,
@@ -100,35 +103,45 @@ const DetailClient:React.FC<DetailClientProps> = ({ categories, product }) => {
         inStock: product.inStock
     })
 
-    console.log(product.category.title)
-
     const reviewCount = product?.reviews?.length
     const reviewRating = product?.reviews?.reduce((acc: number, item: any) => acc + item.rating, 0) / reviewCount || null
 
     const handleIncrease = () => {
         if (cartProduct.quantity >= 9) return
-        setcartProduct(prev => ({ ...prev, quantity: prev.quantity + 1 }))
+        setCartProduct(prev => ({ ...prev, quantity: prev.quantity + 1 }))
     }
 
     const handleDecrease = () => {
         if (cartProduct.quantity <= 1) return
-        setcartProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
+        setCartProduct(prev => ({ ...prev, quantity: prev.quantity - 1 }))
     }
 
     const handleAddToCart = (isRedirection: boolean = false) => {
 
+        if (!currentUser) {
+            router.push("/login")
+            return
+        }
+
         dispatch(addToCart(cartProduct))
         toast.success('Successfully added to cart!');
 
-        if (isRedirection)
+        if (isRedirection){
             router.push("/cart")
+        }
     }
-    
 
-    useEffect(() => {   
+
+    useEffect(() => {
 
         dispatch(visitProduct(product))
     }, [])
+
+    
+    const currentUserFeedback = currentUser?.reviews?.find((review: Review) => review.productId == product.id)
+    const isUserBoughtBefore = currentUser?.orders?.some((order: Order) => Object.values(order.items as Product[]).some((item:Product) => item.id == product.id))
+    console.log("currentUserFeedback", currentUserFeedback)
+    console.log("isUserBoughtBefore", isUserBoughtBefore)
 
     return (
         <PageContainer activeCategory={product?.category.title} categories={categories}>
@@ -163,6 +176,12 @@ const DetailClient:React.FC<DetailClientProps> = ({ categories, product }) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className="flex justify-end">
+                                {
+                                    currentUser?.id && isUserBoughtBefore &&
+                                    <LeaveFeedback userId={currentUser.id} productId={product.id} brandName={product.brand.title} productName={product.title} currentUserFeedback={currentUserFeedback} />
+                                }
+                            </div>
                         </div>
 
                         <div className="py-2 border-t border-b border-gray-200">
@@ -185,12 +204,12 @@ const DetailClient:React.FC<DetailClientProps> = ({ categories, product }) => {
 
                             <Counter handleIncrease={handleIncrease} handleDecrease={handleDecrease} cartProduct={cartProduct} />
                             <div>
-                                <Button iconBegin={ <FaHeart size={18} />} outlined innerHeight={3} color="primary"/>
+                                <Button iconBegin={<FaHeart size={18} />} outlined innerHeight={3} color="primary" />
                             </div>
                         </div>
 
                         <div className="flex flex-col pt-1 gap-y-2">
-                            <Button text="Add to Cart" onClick={() => handleAddToCart()} color="primary" iconBegin={<FaCartShopping />} innerHeight={4}/>
+                            <Button text="Add to Cart" onClick={() => handleAddToCart()} color="primary" iconBegin={<FaCartShopping />} innerHeight={4} />
                             <Button text="Buy now" onClick={() => handleAddToCart(true)} color="secondary" innerHeight={4} />
                         </div>
                     </div>
@@ -200,7 +219,7 @@ const DetailClient:React.FC<DetailClientProps> = ({ categories, product }) => {
                         <Flowbite theme={{ theme: customTheme }}>
                             <Tabs aria-label="Full width tabs" style="fullWidth">
                                 <Tabs.Item active title="Description" icon={MdOutlineDescription}>
-                                    <Description description={product?.description}/>
+                                    <Description description={product?.description} />
                                 </Tabs.Item>
                                 <Tabs.Item title="Reviews" icon={MdOutlineReviews}>
                                     <Reviews reviews={product?.reviews} />

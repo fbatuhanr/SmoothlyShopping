@@ -4,14 +4,16 @@ import Footer from "./components/footer/Footer";
 import { ToastContainer } from "react-toastify";
 import CartSlide from "./components/cart/CartSlide";
 
-import StoreProvider from "./StoreProvider";
-import AuthProvider from "./AuthProvider";
+import Providers from "./components/providers/ProgressBarProvider";
+import StoreProvider from "./components/providers/StoreProvider";
+import AuthProvider from "./components/providers/AuthProvider";
 
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./globals.css";
+
 
 export const metadata: Metadata = {
   title: "Smoothly Shopping",
@@ -22,17 +24,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={inter.className}>
-        <StoreProvider>
-          <AuthProvider>
-            <ToastContainer autoClose={2500} pauseOnHover={false} hideProgressBar={true} />
-            <CartSlide />
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </div>
-          </AuthProvider>
-        </StoreProvider>
+        <Providers>
+          <StoreProvider>
+            <AuthProvider>
+              <ToastContainer autoClose={2500} pauseOnHover={false} hideProgressBar={true} />
+              <CartSlide />
+                <div className="flex flex-col min-h-screen">
+                  <Navbar />
+                    <main className="flex-grow">{children}</main>
+                  <Footer />
+                </div>
+            </AuthProvider>
+          </StoreProvider>
+        </Providers>
       </body>
     </html>
   );

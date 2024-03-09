@@ -2,16 +2,20 @@
 
 import Heading from "@/app/components/general/Heading"
 import priceFormat from "@/utils/PriceFormat"
-import { Order, OrderStatusEnum } from "@prisma/client"
+import { Order, OrderStatusEnum, Prisma } from "@prisma/client"
 import Image from "next/image"
 import { CartProductProps } from "../../detail/DetailClient"
 import axios, { AxiosError } from "axios"
 import { toast } from "react-toastify"
-import Link from "next/link"
 import { MdError } from "react-icons/md"
 
+type OrderWithUser = Prisma.OrderGetPayload<{
+  include: { user: true }
+}>
+type OrderWithPayload = Order & OrderWithUser;
+
 interface AdminOrdersClientProps {
-  orders: Array<Order>
+  orders: Array<OrderWithPayload>
 }
 const AdminOrdersClient: React.FC<AdminOrdersClientProps> = ({ orders }) => {
 
@@ -44,7 +48,9 @@ const AdminOrdersClient: React.FC<AdminOrdersClientProps> = ({ orders }) => {
       <Heading text="All Orders" textSize="3xl" subText="Display orders that placed from users." subTextSize="base" border />
       {
         orders.length ?
-        orders.map((order: Order) => {
+        orders.map((order: OrderWithUser) => {
+
+          console.log(order)
 
           const formattedDeliveryAddress = order.deliveryAddress.name + ", " + order.deliveryAddress.address + ", " + order.deliveryAddress.city + ", " + order.deliveryAddress.state + ", " + order.deliveryAddress.country + ", " + order.deliveryAddress.zipcode + ", " + order.deliveryAddress.phone + (order.deliveryAddress.additional ? ", (" + order.deliveryAddress.additional + ")" : "")
           const formattedBillingAddress = order.billingAddress.name + ", " + order.billingAddress.address + ", " + order.billingAddress.city + ", " + order.billingAddress.state + ", " + order.billingAddress.country + ", " + order.deliveryAddress.zipcode + ", " + order.billingAddress.phone + (order.billingAddress.additional ? ", (" + order.billingAddress.additional + ")" : "")
@@ -65,9 +71,9 @@ const AdminOrdersClient: React.FC<AdminOrdersClientProps> = ({ orders }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="text-lg">
-                    <td className="py-4 max-w-16 pr-4 break-words">{order.userId}</td>
-                    <td className="max-w-16 pr-4 break-words">{order.id}</td>
+                  <tr>
+                    <td className="py-4 pr-4 break-words">{order.user.name}</td>
+                    <td className="max-w-20 break-words text-sm">{order.id}</td>
                     <td>
                       {
                         order.items && Object.values(order.items).map((item: CartProductProps) =>
@@ -76,17 +82,17 @@ const AdminOrdersClient: React.FC<AdminOrdersClientProps> = ({ orders }) => {
                               <Image src={item.image} alt={item.title} fill className="object-contain object-center" />
                             </div>
                             <div className="flex w-full flex-col">
-                              <div className="font-semibold">{item.title}</div>
+                              <div className="font-medium">{item.title}</div>
                               <div className="float-right text-gray-400 ">{item.brand}</div>
-                              <div className="text-lg font-bold">{priceFormat(item.price)} x {item.quantity}</div>
+                              <div className="font-medium">{priceFormat(item.price)} x {item.quantity}</div>
                             </div>
                           </div>
                         )
                       }
                     </td>
-                    <td>{priceFormat(order.itemsCost)}</td>
+                    <td className="font-medium">{priceFormat(order.itemsCost)}</td>
                     <td>{order.shippingOption}</td>
-                    <td>{priceFormat(order.totalCost)}</td>
+                    <td className="font-medium">{priceFormat(order.totalCost)}</td>
                     <td>
                       <select onChange={(e) => handleStatusChange(e, order.id)} defaultValue={order.status}>
                         {

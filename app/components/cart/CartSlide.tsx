@@ -29,11 +29,11 @@ const CartSlide = () => {
     return <>
         {
             isEnabled &&
-            <div className="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <div className="relative" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+                <div className="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
                 <Slide direction="left" in={canSlide} onExited={handleSlideOut}>
-                    <div className="fixed inset-0 overflow-hidden">
+                    <div className="fixed z-30 inset-0 overflow-hidden">
                         <div className="absolute inset-0 overflow-hidden">
 
                             <ClickAwayListener onClickAway={handleClosePanel}>

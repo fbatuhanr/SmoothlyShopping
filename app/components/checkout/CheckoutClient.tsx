@@ -82,6 +82,7 @@ const CheckoutClient: React.FC<ManageAddressesProps> = ({ currentUser, addresses
             deliveryAddress,
             billingAddress,
         }
+        console.log(resultData)
 
         axios.post("/api/order", resultData)
             .then(() => {

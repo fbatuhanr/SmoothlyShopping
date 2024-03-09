@@ -29,6 +29,8 @@ const Account: React.FC<UserProps> = ({ currentUser }) => {
     signOut({
       redirect: true,
       callbackUrl: "/"
+    }).then(()=>{
+      window.location.reload()
     })
   }
 
@@ -46,7 +48,7 @@ const Account: React.FC<UserProps> = ({ currentUser }) => {
             </div>
           </button>
           <Fade in={isOpened}>
-            <div className="absolute z-10 top-12 right-0 min-w-80 max-w-[24rem] rounded-lg border border-blue-gray-50 bg-white p-4 font-sans shadow-lg shadow-gray-500/10 focus:outline-none">
+            <div className="absolute z-20 top-12 right-0 min-w-80 max-w-[24rem] rounded-lg border border-blue-gray-50 bg-white p-4 font-sans shadow-lg shadow-gray-500/10 focus:outline-none">
               {
                 currentUser ?
                   <>

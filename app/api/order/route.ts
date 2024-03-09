@@ -1,15 +1,8 @@
-import { getCurrentUser } from "@/app/actions/getCurrentUser"
-import { CartProductProps } from "@/app/components/detail/DetailClient"
 import prisma from "@/libs/prismadb"
 import { Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
-
-    const currentUser = await getCurrentUser()
-    if (!currentUser || currentUser.role !== "ADMIN") {
-        return NextResponse.error()
-    }
 
     const body = await request.json()
     const {

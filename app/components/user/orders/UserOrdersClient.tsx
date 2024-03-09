@@ -25,10 +25,10 @@ const UserOrdersClient: React.FC<UserOrdersClientProps> = ({ orders }) => {
 
           return (
             <div className="border-2 p-4">
-              <table className="table-fixed">
-                <thead className="text-left border-b text-xl font-semibold">
+              <table className="table-auto">
+                <thead className="text-left border-b text-lg font-semibold">
                   <tr>
-                    <th>Order ID</th>
+                    <th className="pr-8">Order ID</th>
                     <th>Products</th>
                     <th>Subtotal</th>
                     <th>Shipping</th>
@@ -37,7 +37,7 @@ const UserOrdersClient: React.FC<UserOrdersClientProps> = ({ orders }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="text-lg">
+                  <tr>
                     <td className="py-4 max-w-16 pr-4 break-words">{order.id}</td>
                     <td>
                       {
@@ -55,10 +55,10 @@ const UserOrdersClient: React.FC<UserOrdersClientProps> = ({ orders }) => {
                         )
                       }
                     </td>
-                    <td>{priceFormat(order.itemsCost)}</td>
-                    <td>{order.shippingOption}</td>
-                    <td>{priceFormat(order.totalCost)}</td>
-                    <td>{order.status}</td>
+                    <td className="pr-8 font-medium">{priceFormat(order.itemsCost)}</td>
+                    <td className="pr-8 font-medium">{order.shippingOption}</td>
+                    <td className="pr-8 font-medium">{priceFormat(order.totalCost)}</td>
+                    <td className="font-medium">{order.status}</td>
                   </tr>
                 </tbody>
                 <tfoot className="border-t">

@@ -6,6 +6,9 @@ export default async function getOrders(){
         const orders = await prisma.order.findMany({
             orderBy: {
                 createdAt: "desc"
+            },
+            include: {
+                user: true
             }
         })
         return orders

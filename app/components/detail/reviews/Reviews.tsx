@@ -54,7 +54,7 @@ const Reviews = ({ reviews }: {reviews: Array<Review>}) => {
                 </div>
                 <div className="min-w-96">
                     {
-                        reviews.map((review: any) =>
+                        reviews.map((review: Review) =>
                             <Comment key={review.id} review={review} />
                         )
                     }
