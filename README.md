@@ -1,4 +1,4 @@
-## Smoothly Shopping is a fullstack e-commerce website developed with using Next.js(Typescript), Prisma ORM, MongoDb, Tailwindcss and Google Firebase for file storage.
+## Smoothly Shopping is a fullstack e-commerce website developed with using Next.js(Typescript), NextAuth, Prisma ORM, MongoDb, Tailwindcss and Google Firebase for file storage.
 
 ### Screen Record (user)
 https://github.com/fbatuhanr/SmoothlyShopping/assets/34348780/533142c3-d276-488a-86e9-e2f8d9df90b3
